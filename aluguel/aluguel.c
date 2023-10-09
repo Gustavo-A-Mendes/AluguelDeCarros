@@ -14,28 +14,14 @@ struct aluguel
     Aluguel *prox_aluguel;
 };
 
-Aluguel *aluguel_inicializa(Aluguel* aluguel)
-{
-    Aluguel *novo_aluguel = (Aluguel*)malloc(sizeof(Aluguel));
-    if (novo_aluguel == NULL)
-    {
-        printf("\nNao foi possivel criar o registro de aluguel\n");
-        return NULL;
-    }
-
-    novo_aluguel->status_aluguel = 0;
-    aluguel = novo_aluguel;
-
-    return aluguel;
-}
-
 Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
 {
     // aloca o espaço necessário para o aluguel novo:
     Aluguel *novo_aluguel = (Aluguel*)malloc(sizeof(Aluguel));
     if (novo_aluguel == NULL)
     {
-        printf("\nNao foi possivel criar o registro de aluguel\n");
+        alert(-12);
+        // printf("\nNao foi possivel criar o registro de aluguel\n");
         return NULL;
     }
 
@@ -43,10 +29,12 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
 
     // ==================================================
     // insere os dados do cliente:
+    strcpy(novo_aluguel->data_aluguel, data);
     novo_aluguel->duracao = duracao;
     novo_aluguel->status_aluguel = 1;
     novo_aluguel->carro = carro;
-    carro_alugado(carro);
+    carro_alugado(novo_aluguel->carro);
+    printf("oi\n");
 
     // ==================================================
     // encadea o endereço dos alugueis:
@@ -84,6 +72,34 @@ void aluguel_libera(Aluguel *aluguel)
     }
 }
 
+void aluguel_imprime(Aluguel *aluguel)
+{
+    printf("%-10s\t%-30s\t%-15s\t%-15s\t%-10s\t%-10s\n", "STATUS", "MODELO", "PLACA", "PRECO", "DATA ALUGUEL", "DURACAO");
+    
+    // printf("%-10s\t", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO");
+    // carro_imprime(aluguel->carro);
+    // printf("\t%-10s\t%-10d\n", aluguel->data_aluguel, aluguel->duracao);
+    
+    printf("%-10s\t%-30s\t%-15s\tR$%-15.2f\t%-10s\t%-10d\n", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO", aluguel->carro->modelo, aluguel->carro->placa, aluguel->carro->preco, aluguel->data_aluguel, aluguel->duracao);
+}
+
+void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl)
+{
+    Aluguel *aluguel_aux;
+    for (aluguel_aux = aluguel; aluguel_aux != NULL; aluguel_aux=aluguel_aux->prox_aluguel)
+    {
+        fprintf(fl, "STATUS:\t%d\n", aluguel_aux->status_aluguel);
+        fprintf(fl, "PRAZO ALUGUEL:\n");
+        fprintf(fl, " -> DE:\t%s\n", aluguel_aux->data_aluguel);
+        fprintf(fl, " -> ATE:\t%s\n", prazo(aluguel_aux->data_aluguel, aluguel_aux->duracao));
+        fprintf(fl, "MODELO:\t%s\n", aluguel_aux->carro->modelo);
+        fprintf(fl, "PLACA:\t%s\n", aluguel_aux->carro->placa);
+        fprintf(fl, "PRECO:\t%.2f\n", aluguel_aux->carro->preco);
+
+        fprintf(fl,"==================================================\n");
+    }
+}
+
 Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 {
     Aluguel *ref = NULL;            /* ponteiro para indicar endereço de referência, inicializado com [NULL] */
@@ -100,9 +116,15 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 	return ref; /* retorna o endereço de referência para o novo cadastro */
 }
 
-char *aluguel_fim(Aluguel *aluguel)
+char *aluguel_data_fim(Aluguel *aluguel)
 {
     int data_inicio = data_para_num(aluguel->data_aluguel);
     char *data_fim = num_para_data(data_inicio + aluguel->duracao);
     return data_fim;
+}
+
+void aluguel_finaliza(Aluguel *aluguel)
+{   
+    aluguel->status_aluguel = 0;
+    carro_alugado(aluguel->carro);
 }

@@ -27,7 +27,7 @@ char *cliente_doc(Cliente *cli);
 /* Função cliente_aluga
     inicia o processo de alguel de carro
 */
-void cliente_aluga(Cliente *cli, Carro* carro);
+void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje);
 
 /* Função cliente_busca
     retorna o elemento que contenha o dado de busca
@@ -55,6 +55,11 @@ Cliente *cliente_lista(Cliente *cli);
     do cliente
 */
 void cliente_edita(Cliente *cli);
+
+/* Função cliente_atualiza_aluguel
+
+*/
+Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje);
 
 /* Função cliente_total
     calcula o total de clientes cadastrados

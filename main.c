@@ -7,8 +7,8 @@
 // #include "carro.h" // pensei em nao ser possivel modificar nada do carro, ento so o cliente.c ja seria suficiente 
 // #include "cliente.c"
 
-int opcao_cliente(void);
-int opcao_carro(void);
+// int opcao_cliente(void);
+// int opcao_carro(void);
 
 int main(void) {
 
@@ -34,7 +34,6 @@ int main(void) {
     // Menu principal:
     do {
         op1 = menu_principal();
-        
         if (op1 == '1')
             clientes = menu_cliente(clientes, carros);
         else if (op1 == '2')
@@ -49,9 +48,3 @@ int main(void) {
 
     return 0;
 }
-
-
-// void realoca_string(char* str)
-// {
-//    realloc(str, strlen(str)*sizeof(char));
-// }

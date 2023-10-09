@@ -10,12 +10,13 @@
 #define TXT_yellow "\x1b[33m"
 #define TXT_reset "\x1b[0m"
 
-int err_cod = 0;
+int alert_cod = 0;
 
 struct carro
 {
     char *placa; 
     char *modelo;
+    // 0 -> indisponível; 1 -> disponível
     int disponibilidade; 
     float preco;
     // Cliente *cliente;
@@ -159,7 +160,10 @@ void carro_disponivel(Carro *carro)
 
 void carro_alugado(Carro *carro)
 {
-    carro->disponibilidade = 0;
+    if (carro->disponibilidade == 1)
+        carro->disponibilidade = 0;
+    else    
+        carro->disponibilidade = 1;
 }
 
 Carro *carro_busca(Carro *carro, char *dado_busca)
