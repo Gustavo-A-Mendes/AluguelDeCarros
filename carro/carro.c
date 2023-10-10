@@ -117,16 +117,16 @@ Carro *carro_lista(Carro *carro)
             scanf("%d", &escolha);
             while (getchar() != '\n');
 
-            carro_aux = carro;
+            // carro_aux = carro;
             if (escolha >= 0 && escolha <= id_carro-1)
             {
                 int i;
                 for (i = 0; i < escolha; i++)
                 {
-                    carro_aux = carro_aux->prox_carro;
+                    carro = carro->prox_carro;
                 }
             }
-            if(carro_aux->disponibilidade == 0)
+            if(carro->disponibilidade == 0)
             {
                 printf("\nCarro indisponivel!\n");
                 delay(500);
@@ -135,7 +135,7 @@ Carro *carro_lista(Carro *carro)
                 break;
         }
 
-        return carro_aux;
+        return carro;
     }
     else
     {
@@ -160,6 +160,7 @@ void carro_disponivel(Carro *carro)
 
 void carro_alugado(Carro *carro)
 {
+    printf(":)");
     if (carro->disponibilidade == 1)
         carro->disponibilidade = 0;
     else    

@@ -174,6 +174,7 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
     // data_hoje = num_para_data(hoje);
     if (compara_data(data_hoje, data) != -1)     /* data do aluguel não pode ser antes da data atual */
     {
+    printf(":)");
         printf("Qual a duracao do aluguel?\n");
         scanf("%d", &duracao);
         while (getchar() != '\n');
