@@ -313,31 +313,31 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
 }
 
 /* FALTA TERMINAR. ADICIONAR FERRAMENTAS DE EDIÇÃO */
-void cliente_consulta(Cliente *cli)
+void cliente_consulta(Cliente *cli, Cliente *consultado)
 {
     int op_cons;
-    char cli_doc[15], cli_tel[15];
+    char consultado_doc[15], consultado_tel[15];
     Aluguel *aluguel_aux, *aluguel_lista;
 
     while (1)
     {
         system(clear());
 
-        mascara(cli->documento, cli_doc, "###.###.###-##");
-        mascara(cli->telefone, cli_tel, "(##)#####-####");
+        mascara(consultado->documento, consultado_doc, "###.###.###-##");
+        mascara(consultado->telefone, consultado_tel, "(##)#####-####");
         
         printf("==========================================================================================\n");
         printf("DADOS DO CLIENTE:\n");
         printf("==========================================================================================\n");
         printf("%-30s\t%-15s\t%-15s\t%-10s\n", "NOME", "CPF", "TELEFONE", "STATUS");
-        printf("%-30s\t%-15s\t%-15s\t%-10s\n", cli->nome, cli_doc, cli_tel, cli->status ? "ATIVO" : "FINALIZADO");
+        printf("%-30s\t%-15s\t%-15s\t%-10s\n", consultado->nome, consultado_doc, consultado_tel, consultado->status ? "ATIVO" : "INATIVO");
         printf("\n==========================================================================================\n");
         printf("INFORMACOES DE ALUGUEL:\n");
         printf("==========================================================================================\n");
         
-        if (cli->status == 1)
+        if (consultado->status == 1)
         {
-            aluguel_aux = cli->ultimo_aluguel;
+            aluguel_aux = consultado->ultimo_aluguel;
             aluguel_imprime(aluguel_aux);
         }
         else
@@ -356,31 +356,35 @@ void cliente_consulta(Cliente *cli)
         switch (op_cons)
         {
         case '1':
-            cliente_edita(cli);
-            break;
+            cliente_edita(cli, consultado);
+            return;
         
         case '2':
-            cliente_exclui(cli, cli->documento);
-            break;
+            cliente_exclui(consultado, consultado->documento);
+            return;
         
         case '3':
-            aluguel_lista = cli->ultimo_aluguel;
+            aluguel_lista = consultado->ultimo_aluguel;
             if (aluguel_lista != NULL)
             {
+                printf("To aq\n"); delay(1000);
                 while (aluguel_lista != NULL)
                 {
                     aluguel_imprime(aluguel_lista);
                     aluguel_lista = aluguel_lista->prox_aluguel;
+                    delay(1000);
                 }
             }
             else
+            {
+                printf("Nao, to aq\n"); delay(1000);
                 alert(-10);
+            }
             break;
         
         case '4':
             alert(0);
             return;
-            break;
 
         default:
             alert(1);
@@ -457,15 +461,21 @@ Cliente *cliente_lista(Cliente *cli)
     return NULL;
 }
 
-void cliente_edita(Cliente *cli)
+void cliente_edita(Cliente *cli, Cliente *editado)
 {
     char nome[32], doc[16], tel[16];    /* dados pessoais cliente */
-    int op_edit = 0;
+    int i, op_edit = 0;
+
+    // caso mude o CPF, será preciso renomear o arquivo
+    // cria o arquivo de histórico:
+    char nome_antigo[51] = "./cliente/historico/cliente";
+    char nome_novo[51] = "./cliente/historico/cliente";
+
     while (op_edit < 3)
     {
         system(clear());
 
-        printf("Aperte X para manter o dado salvo:\n");
+        printf("Deixe em branco para manter o dado salvo:\n");
         printf("==================================================\n");
 
         switch (op_edit)
@@ -475,71 +485,85 @@ void cliente_edita(Cliente *cli)
 
         case 0:     /* nome do cliente */
             printf("Digite o novo nome:\n");
-            printf("Antigo: %s\n", cli->nome);
+            printf("Antigo: %s\n", editado->nome);
             printf("Novo: ");
-            scanf(" %31[^\n]", nome);
-            while (getchar() != '\n');
-            if (strlen(nome) > 30)                  /* verifica se o nome é válido */
-            {
-                alert(3);
-                break;
-            }
+            i = 0;
+            while ((nome[i] = getchar()) != '\n') i++;
+            nome[i] = '\0';
 
-            if (strcmp(strupr(nome), "X") != 0)
-                strcpy(cli->nome, strupr(nome));
-            
+            if (strlen(nome) > 0)
+            {
+                if (strlen(nome) > 30)  /* verifica se o nome é válido */
+                {
+                    alert(3);           /* tamanho máximo excedido */
+                    break;
+                }
+                strcpy(editado->nome, strupr(nome));
+            }
             break;
 
         case 1:     /* CPF do cliente*/
             printf("Digite o novo CPF (somente numeros):\n");
+            
+            // nome antigo arquivo de histórico
+            strcat(nome_antigo, editado->documento);
+            strcat(nome_antigo, ".txt");
 
-            mascara(cli->documento, doc, "###.###.###-##");
+            mascara(editado->documento, doc, "###.###.###-##");
             printf("Antigo: %s\n", doc);
             printf("Novo: ");
-            scanf(" %12[^\n]", doc);
-            while (getchar() != '\n');
-            if (teste_formato(doc))                 /* verifica se o CPF é válido */
+            // scanf(" %12[^\n]", doc);
+            i = 0;
+            while ((doc[i] = getchar()) != '\n') i++;
+            doc[i] = '\0';
+            if (strlen(doc) > 0)
             {
-                if (strlen(doc) != 11) 
+                if (teste_formato(doc)) /* verifica se o CPF é válido */
                 {
-                    alert(4);
+                    if (strlen(doc) == 11) 
+                    {
+                        // nome novo do arquivo:
+                        strcat(nome_novo, doc);
+                        strcat(nome_novo, ".txt");
+                        rename(nome_antigo, nome_novo);
+                        // muda o nome do cliente:
+                        strcpy(editado->documento, doc);
+                    }
+                    alert(4);           /* Tamanho de CPF inválido */
+                    break;
+                }
+                else
+                {
+                    alert(5);           /* Formato de CPF inválido */
                     break;
                 }
             }
-            else
-            {
-                alert(5);
-                break;
-            }
-
-            if (strcmp(strupr(doc), "X") != 0)
-                strcpy(cli->documento, doc);
-            
             break;
         
         case 2:     /* Telefone de contato do cliente */
             printf("Novo telefone (somente numeros):\n");
 
-            mascara(cli->telefone, tel, "(##)#####-####");
+            mascara(editado->telefone, tel, "(##)#####-####");
             printf("Antigo: %s\n", tel);
             printf("Novo: ");
-            scanf(" %12[^\n]", tel);
-            while (getchar() != '\n');
-            if (teste_formato(tel))                 /* verifica se o telefone é válido */
+            i = 0;
+            while ((tel[i] = getchar()) != '\n') i++;
+            tel[i] = '\0';
+            if (strlen(tel) > 0)
             {
-                if (strlen(tel) != 11)
+                if (teste_formato(tel))     /* verifica se o telefone é válido */
                 {
-                    alert(6);
+                    if (strlen(tel) != 11)
+                    {
+                        alert(6);           /* Tamanho de telefone inválido */
+                        break;
+                    }
+                } else {
+                    alert(7);               /* Formato de telefone inválido */
                     break;
                 }
-            } else {
-                alert(7);
-                break;
+                strcpy(editado->telefone, tel);
             }
-
-            if (strcmp(strupr(tel), "X") != 0)
-                strcpy(cli->telefone, tel);
-            
             break;
         
         default:
@@ -548,7 +572,9 @@ void cliente_edita(Cliente *cli)
         op_edit++;
     }
 
-    cliente_atualiza_historico(0, cli, cli->documento);
+    cliente_atualiza_historico(0, editado, editado->documento);
+    cliente_registra(cli);
+    alert(-13);
 }
 
 Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
@@ -636,6 +662,7 @@ void cliente_atualiza_historico(int tag, Cliente *cli, char* doc)
         fprintf(hist, "NOME:\t%s\n", cli->nome);
         fprintf(hist, "CPF:\t%s\n", cli->documento);
         fprintf(hist, "TELEFONE:\t%s\n", cli->telefone);
+        fprintf(hist, "STATUS:\t%d\n", cli->status);
 
         fprintf(hist,"%%\n");     /* Indicador de parada, para busca do histórico */
         

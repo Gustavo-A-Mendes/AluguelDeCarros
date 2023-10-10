@@ -236,7 +236,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 if (cliente_aux != NULL)
                 {
                     system(clear());
-                    cliente_consulta(cliente_aux);
+                    cliente_consulta(cli, cliente_aux);
                 }
                 break;
 
@@ -253,7 +253,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 if (cliente_aux != NULL)
                 {
                     system(clear());
-                    cliente_consulta(cliente_aux);
+                    cliente_consulta(cli, cliente_aux);
                 }
                 break;
 
@@ -692,6 +692,7 @@ void alert_msg(void)
     else if (alert_cod == -10) printf(TXT_red"\nNao ha alugueis no historico."TXT_reset);
     else if (alert_cod == -11) printf(TXT_green"\nAluguel criado!"TXT_reset);
     else if (alert_cod == -12) printf(TXT_red"\nAluguel falhou!"TXT_reset);
+    else if (alert_cod == -13) printf(TXT_green"\nDados Atualizados!"TXT_reset);
 
     alert(0);    /* reseta marcador */
 }

@@ -43,7 +43,7 @@ Cliente *cliente_filtra_busca(Cliente *cli, char* dado_busca);
 /* Função cliente_consulta
     verifica os detalhes de registro do cliente (dados pessoais e aluguel)
 */
-void cliente_consulta(Cliente *cli);
+void cliente_consulta(Cliente *cli, Cliente *consultado);
 
 /* Função cliente_lista
     imprime um lista dos clientes cadastrados
@@ -54,7 +54,7 @@ Cliente *cliente_lista(Cliente *cli);
     abre sessão de edição, para modificar os dados pessoais
     do cliente
 */
-void cliente_edita(Cliente *cli);
+void cliente_edita(Cliente *cli, Cliente *editado);
 
 /* Função cliente_atualiza_aluguel
 
