@@ -174,14 +174,12 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
     // data_hoje = num_para_data(hoje);
     if (compara_data(data_hoje, data) != -1)     /* data do aluguel não pode ser antes da data atual */
     {
-    printf(":)");
         printf("Qual a duracao do aluguel?\n");
         scanf("%d", &duracao);
         while (getchar() != '\n');
 
         cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao);
-        printf("oi2\n");
-        cliente_atualiza_historico(1, cli, cli->documento);
+        cliente_atualiza_historico(1, cli);
         cli->status = 1;
         alert(-11);
     }
@@ -217,6 +215,36 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
 
     if (cli != NULL)
     {
+        // verifica se há alguma resultado na busca:
+        int tipo = teste_formato(dado_busca);   /* verifica se o dado usado é nome ou CPF */
+        
+        id_cliente = 0;
+        if (tipo == 0)      /* procura pelo nome do cliente */
+        {
+            for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)   
+            {
+                if (compara(cliente_aux->nome, string_upper(dado_busca)) == 0)
+                {
+                    id_cliente++;
+                }
+            }
+        }
+        else                /* procura pelo CPF do cliente */
+        {
+            for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
+            {
+                if (compara(cliente_aux->documento, dado_busca) == 0) {
+                    id_cliente++;
+                }
+            }
+        }
+        if (id_cliente == 0)
+        {
+            alert(-6);    
+            return NULL;
+        }
+
+        // verificado que há resultados, refaz a busca, imprimindo os resultados:
         while (1)
         {
             system(clear());
@@ -227,11 +255,9 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
             printf("%-3s\t%-30s\t%-15s\t%-15s\t%-10s\n", "ID", "NOME", "CPF", "TELEFONE", "STATUS");
             printf("==========================================================================================\n");
 
-            // verifica o tipo de dado usado para a busca [nome/CPF]:
-            int tipo = teste_formato(dado_busca);
+            id_cliente = 0;
             if (tipo == 0)  /* procura o elemento na lista pelo nome do cliente */
             {
-                id_cliente = 0;
                 for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)   
                 {
                     if (compara(cliente_aux->nome, string_upper(dado_busca)) == 0)
@@ -244,7 +270,6 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
             }
             else            /* procura o elemento na lista pelo CPF do cliente */
             {
-                id_cliente = 0;
                 for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
                 {
                     if (compara(cliente_aux->documento, dado_busca) == 0) {
@@ -263,15 +288,15 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
             int i = 0;
             while ((ch_escolha[i] = getchar()) != '\n') i++;
             ch_escolha[i] = '\0';
-            if (strlen(ch_escolha) > 0)                 /* verifica se está vazio */
+            if (strlen(ch_escolha) > 0)                 /* verifica se a escolha está vazia */
             {
                 if (teste_formato(ch_escolha) != 0)     /* verifica se é um número */
                 {
                     escolha = atoi(ch_escolha);
                     if (escolha >= 0 && escolha <= id_cliente-1)
                     {
+                        i = 0;
                         cliente_escolha = cli;
-                        for (i = 0; i <= escolha;)
                         while (1)
                         {
                             if (tipo == 0)  /* procura o elemento na lista pelo nome do cliente */
@@ -307,14 +332,14 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
         }
     }
     else
-        alert(-6);          /* lista está vazia */
+        alert(-5);          /* lista está vazia */
 
     // retorna o cliente escolhido:
     return NULL;
 }
 
 /* FALTA TERMINAR. ADICIONAR FERRAMENTAS DE EDIÇÃO */
-void cliente_consulta(Cliente *cli, Cliente *consultado)
+int cliente_consulta(Cliente *cli, Cliente *consultado)
 {
     int op_cons;
     char consultado_doc[15], consultado_tel[15];
@@ -348,7 +373,8 @@ void cliente_consulta(Cliente *cli, Cliente *consultado)
         printf("\n>>>[1] Editar\n");
         printf(">>>[2] Excluir\n");
         printf(">>>[3] Visualizar historico\n");
-        printf(">>>[4] Voltar ao Menu\n");
+        printf(">>>[4] Voltar a Lista\n");
+        printf(">>>[5] Voltar ao Menu\n");
         
         alert_msg();
         printf("\nEscolha uma opcao: ");
@@ -356,40 +382,40 @@ void cliente_consulta(Cliente *cli, Cliente *consultado)
 
         switch (op_cons)
         {
-        case '1':
-            cliente_edita(cli, consultado);
-            return;
-        
-        case '2':
-            cliente_exclui(consultado, consultado->documento);
-            return;
-        
-        case '3':
-            aluguel_lista = consultado->ultimo_aluguel;
-            if (aluguel_lista != NULL)
-            {
-                printf("To aq\n"); delay(1000);
-                while (aluguel_lista != NULL)
+            case '1':
+                cliente_edita(cli, consultado);
+                break;
+            
+            case '2':
+                cliente_exclui(consultado, consultado->documento);
+                return 0;
+            
+            case '3':
+                aluguel_lista = consultado->ultimo_aluguel;
+                if (aluguel_lista != NULL)
                 {
-                    aluguel_imprime(aluguel_lista);
-                    aluguel_lista = aluguel_lista->prox_aluguel;
-                    delay(1000);
+                    while (aluguel_lista != NULL)
+                    {
+                        aluguel_imprime(aluguel_lista);
+                        aluguel_lista = aluguel_lista->prox_aluguel;
+                        delay(1000);
+                    }
                 }
-            }
-            else
-            {
-                printf("Nao, to aq\n"); delay(1000);
-                alert(-10);
-            }
-            break;
-        
-        case '4':
-            alert(0);
-            return;
+                else
+                    alert(-10);
+                break;
+            
+            case '4':
+                alert(0);
+                return 1;
 
-        default:
-            alert(1);
-            break;
+            case '5':
+                alert(0);
+                return 0;
+
+            default:
+                alert(1);
+                break;
         }
     }
 }
@@ -457,7 +483,7 @@ Cliente *cliente_lista(Cliente *cli)
         }
     }
     else
-        alert(-6);          /* lista está vazia */
+        alert(-5);          /* lista está vazia */
 
     return NULL;
 }
@@ -573,7 +599,7 @@ void cliente_edita(Cliente *cli, Cliente *editado)
         op_edit++;
     }
 
-    cliente_atualiza_historico(0, editado, editado->documento);
+    cliente_atualiza_historico(0, editado);
     cliente_registra(cli);
     alert(-13);
 }
@@ -591,7 +617,7 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
         {
             cliente_aux->status = 0;
             aluguel_finaliza(aluguel_aux);
-            cliente_atualiza_historico(1, cli, cli->documento);
+            cliente_atualiza_historico(1, cli);
         }
     }
 }
@@ -638,12 +664,12 @@ void cliente_cria_historico(Cliente *cli, char* doc)
     fclose(hist);
 }
 
-void cliente_atualiza_historico(int tag, Cliente *cli, char* doc)
+void cliente_atualiza_historico(int tag, Cliente *cli)
 {
     // cria o arquivo de histórico:
     char nome_arquivo[51] = "./cliente/historico/cliente";
 
-    strcat(nome_arquivo, doc);
+    strcat(nome_arquivo, cli->documento);
     strcat(nome_arquivo, ".txt");
 
     FILE *hist = fopen(nome_arquivo, "r+");
@@ -849,18 +875,13 @@ Cliente *cliente_leia(Cliente *cli, Carro *carro)
         // pula a linha do cabeçalho:
         char pula[100];
         fgets(pula, 100, fl);
-
         // printf("Dados registro:\n");
         while (!feof(fl))
-        {
+        {   
             fscanf(fl, "%[^\t]\t%[^\t]\t%[^\n]\n", nome, doc, status);
-            // printf("%s\t%s\n\n", nome, doc);
-            // cli = cliente_cadastra(cli, nome, doc, tel);
             cli = cliente_recupera_historico(cli, carro, doc);
-
         }
     }
-    // delay(1000);            /* atraso para verificar resposta */
 
     fclose(fl);
     return cli;

@@ -231,12 +231,15 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 
                 system(clear());
                 
-                cliente_aux = cliente_lista(cli);
-
-                if (cliente_aux != NULL)
+                while (1)
                 {
-                    system(clear());
-                    cliente_consulta(cli, cliente_aux);
+                    cliente_aux = cliente_lista(cli);
+                    if (cliente_aux != NULL)
+                    {
+                        system(clear());
+                        if (cliente_consulta(cli, cliente_aux) == 0) break;
+                    }
+                    else break;
                 }
                 break;
 
@@ -249,11 +252,16 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 printf("Insira o nome ou o CPF do cliente: ");
                 scanf(" %30[^\n]", dado);
                 while (getchar() != '\n');
-                cliente_aux = cliente_filtra_busca(cli, dado);
-                if (cliente_aux != NULL)
+                
+                while (1)
                 {
-                    system(clear());
-                    cliente_consulta(cli, cliente_aux);
+                    cliente_aux = cliente_filtra_busca(cli, dado);
+                    if (cliente_aux != NULL)
+                    {
+                        system(clear());
+                        if (cliente_consulta(cli, cliente_aux) == 0) break;
+                    }
+                    else break;
                 }
                 break;
 

@@ -160,7 +160,6 @@ void carro_disponivel(Carro *carro)
 
 void carro_alugado(Carro *carro)
 {
-    printf(":)");
     if (carro->disponibilidade == 1)
         carro->disponibilidade = 0;
     else    

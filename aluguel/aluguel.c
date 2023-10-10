@@ -34,7 +34,6 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
     novo_aluguel->status_aluguel = 1;
     novo_aluguel->carro = carro;
     carro_alugado(novo_aluguel->carro);
-    printf("oi\n");
 
     // ==================================================
     // encadea o endereço dos alugueis:

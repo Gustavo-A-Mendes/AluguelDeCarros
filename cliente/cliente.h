@@ -43,7 +43,7 @@ Cliente *cliente_filtra_busca(Cliente *cli, char* dado_busca);
 /* Função cliente_consulta
     verifica os detalhes de registro do cliente (dados pessoais e aluguel)
 */
-void cliente_consulta(Cliente *cli, Cliente *consultado);
+int cliente_consulta(Cliente *cli, Cliente *consultado);
 
 /* Função cliente_lista
     imprime um lista dos clientes cadastrados
@@ -77,9 +77,9 @@ void cliente_libera(Cliente *cli);
 void cliente_cria_historico(Cliente *cli, char *doc);
 
 /* Função cliente_atualiza_historico
-    atualiza os dados pessoais do cliente no histórico
+    atualiza as informações do cliente no histórico
 */
-void cliente_atualiza_historico(int tag, Cliente *cli, char* doc);
+void cliente_atualiza_historico(int tag, Cliente *cli);
 
 /* Função cliente_recupera_historico
     recarrega a lista de clientes no início da execução do programa
