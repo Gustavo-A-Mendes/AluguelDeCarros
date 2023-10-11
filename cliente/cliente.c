@@ -125,6 +125,7 @@ Cliente *cliente_exclui(Cliente *cli, char *dado)
             aluguel_libera(cliente_excluido->ultimo_aluguel);
             free(cliente_excluido);
             
+            cliente_registra(cli);
             alert(-4);      /* cadastro excluido */
             break;
         } 
@@ -401,7 +402,7 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                 break;
             
             case '2':
-                cliente_exclui(consultado, consultado->documento);
+                cliente_exclui(cli, consultado->documento);
                 return 0;
             
             case '3':

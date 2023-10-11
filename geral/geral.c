@@ -340,6 +340,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro, char *data_hoje)
         printf(">>> [3] CONSULTAR CARROS\n"); //Consultar se está disponivel 
         printf(">>> [4] VOLTAR\n");
 
+        alert_msg();
         printf("\nEscolha uma opcao: ");
 
         op3 = teste_input();
@@ -745,6 +746,7 @@ void alert_msg(void)
     else if (alert_cod == -11) printf(TXT_green"\nAluguel criado!"TXT_reset);
     else if (alert_cod == -12) printf(TXT_red"\nAluguel falhou!"TXT_reset);
     else if (alert_cod == -13) printf(TXT_green"\nDado(s) Atualizado(s)!"TXT_reset);
+    else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!"TXT_reset);
 
     alert(0);    /* reseta marcador */
 }
