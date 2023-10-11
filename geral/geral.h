@@ -34,12 +34,12 @@ Carro *menu_carro(Carro *carro);
 /* Função data_para_num
     Converte uma string de data em seu correspondente numérico
 */
-int data_para_num(char *data);
+long long data_para_num(char *data);
 
 /* Função num_para_data
     Converte um valor numérico em uma string de data
 */
-char *num_para_data(int data);
+char *num_para_data(long long data);
 
 /* Função data_valida
     Verifica se a data inseria é válida
@@ -56,7 +56,7 @@ int compara_data(char *data1, char *data2);
 /* Função calcula_tempo
     Calcula a data final do prazo estipulado
 */
-char *prazo(char *data, int duracao);
+char *prazo(char *data, long long duracao);
 
 /* Função compara
     Faz a comparação entre as strings

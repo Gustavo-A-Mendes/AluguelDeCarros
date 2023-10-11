@@ -193,7 +193,7 @@ void cliente_imprime(Cliente *cli)
 
     mascara(cli->documento, cliente_doc, "###.###.###-##");
     mascara(cli->telefone, cliente_tel, "(##)#####-####");
-    printf("%-30s\t%-15s\t%-15s\n", cli->nome, cliente_doc, cliente_tel);
+    printf("%-30s\t%-15s\t%-15s\t%-10s\n", cli->nome, cliente_doc, cliente_tel, cli->status ? "ALUGANDO" : "SEM ALUGUEL");
 }
 
 Cliente *cliente_busca(Cliente *cli, char *dado_busca)
@@ -355,8 +355,8 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
         printf("==========================================================================================\n");
         printf("DADOS DO CLIENTE:\n");
         printf("==========================================================================================\n");
-        printf("%-30s\t%-15s\t%-15s\t%-10s\n", "NOME", "CPF", "TELEFONE", "STATUS");
-        printf("%-30s\t%-15s\t%-15s\t%-10s\n", consultado->nome, consultado_doc, consultado_tel, consultado->status ? "ATIVO" : "INATIVO");
+        printf("%-30s\t%-15s\t%-15s\t%-15s\n", "NOME", "CPF", "TELEFONE", "STATUS");
+        printf("%-30s\t%-15s\t%-15s\t%-15s\n", consultado->nome, consultado_doc, consultado_tel, consultado->status ? "ALUGANDO" : "SEM ALUGUEL");
         printf("\n==========================================================================================\n");
         printf("INFORMACOES DE ALUGUEL:\n");
         printf("==========================================================================================\n");
@@ -514,10 +514,11 @@ void cliente_edita(Cliente *cli, Cliente *editado)
             printf("Digite o novo nome:\n");
             printf("Antigo: %s\n", editado->nome);
             printf("Novo: ");
+            // scanf("%[^\n]", nome);
+            // while (getchar() != '\n');
             i = 0;
             while ((nome[i] = getchar()) != '\n') i++;
             nome[i] = '\0';
-
             if (strlen(nome) > 0)
             {
                 if (strlen(nome) > 30)  /* verifica se o nome é válido */
@@ -539,7 +540,8 @@ void cliente_edita(Cliente *cli, Cliente *editado)
             mascara(editado->documento, doc, "###.###.###-##");
             printf("Antigo: %s\n", doc);
             printf("Novo: ");
-            // scanf(" %12[^\n]", doc);
+            // scanf("%[^\n]", doc);
+            // while (getchar() != '\n');
             i = 0;
             while ((doc[i] = getchar()) != '\n') i++;
             doc[i] = '\0';
@@ -573,6 +575,8 @@ void cliente_edita(Cliente *cli, Cliente *editado)
             mascara(editado->telefone, tel, "(##)#####-####");
             printf("Antigo: %s\n", tel);
             printf("Novo: ");
+            // scanf("%[^\n]", tel);
+            // while (getchar() != '\n');
             i = 0;
             while ((tel[i] = getchar()) != '\n') i++;
             tel[i] = '\0';
@@ -609,15 +613,20 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
     Cliente *cliente_aux;
     Aluguel *aluguel_aux;
     char *data_final;
+    printf("oi\n");
+
     for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
     {
         aluguel_aux = cliente_aux->ultimo_aluguel;
-        data_final = aluguel_data_fim(aluguel_aux);
-        if (compara_data(data_final, data_hoje) == 1)
+        if (aluguel_aux != NULL)
         {
-            cliente_aux->status = 0;
-            aluguel_finaliza(aluguel_aux);
-            cliente_atualiza_historico(1, cli);
+            data_final = aluguel_data_fim(aluguel_aux);
+            if (compara_data(data_final, data_hoje) == 1)
+            {
+                cliente_aux->status = 0;
+                aluguel_finaliza(aluguel_aux);
+                cliente_atualiza_historico(1, cli);
+            }
         }
     }
 }
@@ -697,13 +706,12 @@ void cliente_atualiza_historico(int tag, Cliente *cli)
     else if (tag == 1)  /* atualiza a lista de histórico */
     {
         while (fgetc(hist) != '%');     /* pula a sessão dos dados do cliente */
-
         // escreve os dados no arquivo, após a sessão dos dados do cliente:
         fprintf(hist,"\n");     /* pula a linha do '%' */
-
-        fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
-        Aluguel *aluguel_aux = cli->ultimo_aluguel;
-        aluguel_atualiza_historico(aluguel_aux, hist);  
+        // fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
+        // Aluguel *aluguel_aux = cli->ultimo_aluguel;
+        // aluguel_atualiza_historico(aluguel_aux, hist);  
+        printf("oi\n"); delay(1000);
     }
 
     fclose(hist);

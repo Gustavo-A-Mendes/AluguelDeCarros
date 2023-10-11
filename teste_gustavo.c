@@ -30,17 +30,41 @@ int main(void) {
     int data1 = 0;
     char *data2 = "01/01/0002";
     char *data;
+    char str[10];
     int dat;
+    // scanf("%[^\n]", str);
+    int i = 0;
+    // do
+    // {
+    //     printf("%d", str[i]);
+    //     i++;
+    // } while (str[i] != '\0');
+    
+    
     // for (int i = 0; i < 731; i++)
     // {
     //     data = num_para_data(i);
     //     printf("%s\n", data);
     // }
-    char c[3];
-    int i = 0;
-    while ((c[i] = getchar()) != '\n') i++;
-    c[i] = '\0';
-    printf("%s", c);
+    i = 0;
+    char c[10];
+
+    scanf("%[^\n]", c);
+    
+    scanf(" %[^\n]", c);
+    
+    while ((c[i] = getchar()) != 'A')i++;
+    
+    // while ((c[i] = getchar()) != '\n') i++;
+    // c[i] = '\0';
+    printf("%d", strlen(c));
+    // i = 0;
+    // do
+    // {
+    //     printf("%d", c[i]);
+    //     i++;
+    // } while (c[i] != '\0');
+    // printf("%s", c);
     // printf("%d", scanf("%d", &dat));
 
     // free(data);

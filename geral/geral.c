@@ -54,6 +54,7 @@ int menu_principal(void){
     switch (op1) {
         case '0':
             data_hoje = passa_tempo(data_hoje);
+
             break;
 
         case '1':
@@ -365,7 +366,7 @@ Carro *menu_carro(Carro *carro)
     return carro; 
 }
 
-int data_para_num(char *data)
+long long data_para_num(char *data)
 {
     int dia, mes, ano;
     int tempo_dia = 0;
@@ -391,7 +392,7 @@ int data_para_num(char *data)
     return tempo_dia;
 }
 
-char *num_para_data(int data)
+char *num_para_data(long long data)
 {
     int ano = 0, mes = 0, dia = 0;
     int dia_mes;
@@ -451,12 +452,12 @@ int compara_data(char *data1, char *data2)
         return 0;
 }
 
-char *prazo(char *data, int duracao)
+char *prazo(char *data, long long duracao)
 {   
     // converte data de início para valor numérico:
-    int data_ini = data_para_num(data);
+    long long data_ini = data_para_num(data);
     // soma a duração do aluguel:
-    int data_fim = data_ini + duracao;
+    long long data_fim = data_ini + duracao;
 
     // retorna a data final do aluguel:
     return num_para_data(data_fim);
@@ -512,7 +513,7 @@ int teste_formato(char *str)
     {
         if (!(str[i] >= '0' && str[i] <= '9'))  /* verifica se o caracter é numérico */
         {   
-            if (str[i] == '-')
+            if (i == 0 && str[i] == '-')
                 negativo++;
             else
                 return 0;   /* é string */
@@ -520,8 +521,7 @@ int teste_formato(char *str)
     }
     if (negativo == 1)
         return -1;          /* é número negativo */
-    else if (negativo > 1)
-        return 0;           /* é string */
+
     return 1;               /* é número positivo */
 }
 
@@ -588,7 +588,8 @@ char *passa_tempo(char *data_antiga)
     system(clear());
 
     char ch_dias[5];
-    int op_data, dias;
+    int i, op_data;
+    long long dias;
     char *data_nova = NULL;
     
     do
@@ -610,11 +611,14 @@ char *passa_tempo(char *data_antiga)
 
                 printf("Quantos dias quer avancar?\n");
                 
-                scanf(" %[^\n]", ch_dias);
-                while (getchar() != '\n');
+                // scanf(" %[^\n]", ch_dias);
+                // while (getchar() != '\n');
+                i = 0;
+                while ((ch_dias[i] = getchar()) != '\n') i++;
+                ch_dias[i] = '\0';
                 if (teste_formato(ch_dias) != 0)    /* o valor é numérico */
                 {
-                    dias = atoi(ch_dias);
+                    dias = atoll(ch_dias);
                     data_nova = prazo(data_antiga, dias);
                     if (compara_data(data_antiga, data_nova) != -1)
                     {
