@@ -174,7 +174,7 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
     if (data != NULL)
     {
         // data_hoje = num_para_data(hoje);
-        if (compara_data(data_hoje, data) != -1)     /* data do aluguel não pode ser antes da data atual */
+        if (compara_data(data_hoje, data) >= 0)     /* data do aluguel não pode ser antes da data atual */
         {
             printf("Qual a duracao do aluguel?\n");
             scanf("%d", &duracao);
@@ -633,7 +633,7 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
         if (aluguel_aux != NULL)
         {
             data_final = aluguel_data_fim(aluguel_aux);
-            if (compara_data(data_final, data_hoje) == 1)
+            if (compara_data(data_final, data_hoje) > 0)
             {
                 cliente_aux->status = 0;
                 aluguel_finaliza(aluguel_aux);
@@ -867,7 +867,7 @@ Cliente *cliente_ordena(Cliente *cli, char *nome)
 
     // O critério de parada será o fim da fila ou encontrar 
     // um nome que venha depois, na ordem alfabética:
-	while (cliente_aux != NULL && compara(cliente_aux->nome, nome) == -1)		/* verifica "cliente_aux" chegou na posição */
+	while (cliente_aux != NULL && compara(cliente_aux->nome, nome) < 0)		/* verifica "cliente_aux" chegou na posição */
 	{
 		ref = cliente_aux;		        /* "ref" aponta para o valor atual de "cliente_aux" */
 		cliente_aux = cliente_aux->prox_cliente;	/* "cliente_aux" passa a apontar para o próximo valor */

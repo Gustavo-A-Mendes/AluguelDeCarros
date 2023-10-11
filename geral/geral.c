@@ -651,7 +651,7 @@ char *passa_tempo(char *data_antiga)
                 {
                     dias = atoll(ch_dias);
                     data_nova = prazo(data_antiga, dias);
-                    if (compara_data(data_antiga, data_nova) != -1)
+                    if (compara_data(data_antiga, data_nova) >= 0)
                     {
                         alert(-1);   /* data atualizada */
                         return data_nova;
@@ -671,7 +671,7 @@ char *passa_tempo(char *data_antiga)
                 data_nova = input_data();
                 if (data_nova != NULL)
                 {
-                    if (compara_data(data_antiga, data_nova) != -1)
+                    if (compara_data(data_antiga, data_nova) >= 0)
                     {
                         alert(-1);   /* data atualizada */
                         return data_nova;
