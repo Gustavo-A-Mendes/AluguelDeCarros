@@ -14,22 +14,22 @@ char *clear(void);
 /* Função cabecalho
     Adiciona o cabeçalho do menu atual
 */
-void cabecalho(char *titulo);
+void cabecalho(char *titulo, char *data_hoje);
 
 /* Função menu_principal 
     Exibe o menu principal
 */
-int menu_principal(Cliente *cli);
+int menu_principal(Cliente *cli, char *data_hoje);
 
 /* Função menu_cliente
     Exibe o menu cliente
 */
-Cliente *menu_cliente(Cliente *cli, Carro *carro);
+Cliente *menu_cliente(Cliente *cli, Carro *carro, char *data_hoje);
 
 /* Função menu_carro
     Exibe o menu carro
 */
-Carro *menu_carro(Cliente *cli, Carro *carro);
+Carro *menu_carro(Cliente *cli, Carro *carro, char *data_hoje);
 
 /* Função data_para_num
     Converte uma string de data em seu correspondente numérico
@@ -117,8 +117,6 @@ void alert_msg(void);
     Gera um atraso, em milissegundos, na resposta do programa
 */
 void delay(double milissegundos);
-
-char *atualiza_data_sistema(char *data);
 
 /* Função registra
     armazena um resumo dos dados do sistema,

@@ -8,7 +8,7 @@
 #include "geral.h"
 
 #define ATRASO 150
-char *data_hoje = "01/01/2023";       /* dia inicial da simulação */
+// char *data_hoje = "01/01/2023";       /* dia inicial da simulação */
 // int alert_cod = 0;
 
 char *clear(void)
@@ -30,7 +30,7 @@ char *clear(void)
     #endif
 }
 
-void cabecalho(char *titulo)
+void cabecalho(char *titulo, char *data_hoje)
 {
     printf("=======================================================\n");
     printf("   ALUGUEL DE CARROS\t%s\t%s\n", titulo, data_hoje);
@@ -38,11 +38,13 @@ void cabecalho(char *titulo)
     printf(">>> [0] PASSAR TEMPO\n\n");
 }
 
-int menu_principal(Cliente* cli){
+int menu_principal(Cliente* cli, char *data_hoje)
+{
     int op1;
+    printf("%s", data_hoje); delay(1000);
     
     system(clear());
-    cabecalho("MENU INICIAR");
+    cabecalho("MENU INICIAR", data_hoje);
     printf(">>> [1] CLIENTE\n");
     printf(">>> [2] VEICULO\n");
     printf(">>> [3] SAIR\n");
@@ -81,7 +83,7 @@ int menu_principal(Cliente* cli){
     return op1;
 }
 
-Cliente *menu_cliente(Cliente *cli, Carro *carro)
+Cliente *menu_cliente(Cliente *cli, Carro *carro, char *data_hoje)
 {
     int op2, op_i;
 
@@ -96,7 +98,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
     do {
         system(clear());
         
-        cabecalho("MENU CLIENTE");
+        cabecalho("MENU CLIENTE", data_hoje);
         
         printf(">>> [1] ALUGAR\n"); // submenu: adicionar cliente            
         printf(">>> [2] LISTAR\n"); // submenu: historico do cliente
@@ -322,7 +324,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
     return cli;
 }
 
-Carro *menu_carro(Cliente *cli, Carro *carro)
+Carro *menu_carro(Cliente *cli, Carro *carro, char *data_hoje)
 {
     int op3;
     Carro *carro_aux;
@@ -331,7 +333,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
         system(clear());
 
         // Menu do Cliente:
-        cabecalho("MENU CARRO");
+        cabecalho("MENU CARRO", data_hoje);
 
         printf(">>> [1] ADICIONAR\n"); 
         printf(">>> [2] LISTAR\n"); //submenu: consultar disp. e consultar historico
@@ -654,7 +656,7 @@ char *passa_tempo(char *data_antiga)
                     if (compara_data(data_antiga, data_nova) >= 0)
                     {
                         alert(-1);   /* data atualizada */
-                        return data_nova;
+                        strcpy(data_antiga, data_nova);
                     }
                     alert(-9);  /*não pode ir pro passado */
                     free(data_nova);
@@ -674,7 +676,7 @@ char *passa_tempo(char *data_antiga)
                     if (compara_data(data_antiga, data_nova) >= 0)
                     {
                         alert(-1);   /* data atualizada */
-                        return data_nova;
+                        strcpy(data_antiga, data_nova);
                     }
                     alert(-9);  /*não pode ir pro passado */
                     free(data_nova);
@@ -697,7 +699,7 @@ char *passa_tempo(char *data_antiga)
     } while (op_data != '3');
     
     free(data_nova);
-    return data_hoje;
+    return data_antiga;
 }
 
 char *string_upper(char *str)
@@ -754,11 +756,6 @@ void delay(double milissegundos)
     
     // looping till required time is not achieved
     while (milissegundos > clock() - tempo_inicial);
-}
-
-char *atualiza_data_sistema(char *data)
-{
-    data_hoje = data;
 }
 
 void registra(char *data, Cliente *cli)
