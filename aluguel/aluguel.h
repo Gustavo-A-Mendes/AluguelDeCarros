@@ -24,6 +24,11 @@ void aluguel_libera(Aluguel *aluguel);
 */
 void aluguel_imprime(Aluguel *aluguel);
 
+/* Função aluguel_imprime_historico
+
+*/
+int aluguel_imprime_historico(Aluguel *aluguel);
+
 /* Função aluguel_historico
 
 */
