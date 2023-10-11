@@ -388,7 +388,7 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
         switch (op_cons)
         {
             case '1':
-                // carro_edita(carro, carro_consultado);
+                carro_edita(carro, carro_consultado);
                 break;
 
             case '2':

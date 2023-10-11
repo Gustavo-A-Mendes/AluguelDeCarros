@@ -64,7 +64,12 @@ Carro *carro_leia(Carro *carro);
 */
 void carro_imprime(Carro *carro, int *qtd_carros);
 
-/* Função carro_coonculta
+/* Função carro_consulta
 
 */
 int carro_consulta(Carro *carro, Carro *carro_consultado);
+
+/* Função carro_edita
+
+*/
+carro_edita(carro, carro_consultado);
