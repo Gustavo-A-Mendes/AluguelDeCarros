@@ -17,17 +17,18 @@ int main(void) {
     int op1 = 0, op2 = 0, op3 = 0;
     
     /* Recuperando dados salvos */
-    printf("Carregando dados dos Carros...\n");
-    delay(ATRASO);     /* atraso para verificar resposta */
-    if((carros = carro_leia(carros)) != NULL)
-        printf("Dados recuperados com sucesso\n");
+    registro_leia(&clientes, &carros, &data_hoje);
+    // printf("Carregando dados dos Carros...\n");
+    // delay(ATRASO);     /* atraso para verificar resposta */
+    // if((carros = carro_leia(carros)) != NULL)
+    //     printf("Dados recuperados com sucesso\n");
     
-    delay(ATRASO);     /* atraso para verificar resposta */
+    // delay(ATRASO);     /* atraso para verificar resposta */
 
-    printf("Carregando dados dos Clientes...\n");
-    delay(ATRASO);     /* atraso para verificar resposta */
-    if((clientes = cliente_leia(clientes, carros)) != NULL)
-        printf("Dados recuperados com sucesso\n");
+    // printf("Carregando dados dos Clientes...\n");
+    // delay(ATRASO);     /* atraso para verificar resposta */
+    // if((clientes = cliente_leia(clientes, carros)) != NULL)
+    //     printf("Dados recuperados com sucesso\n");
 
     delay(ATRASO);     /* atraso para verificar resposta */
 

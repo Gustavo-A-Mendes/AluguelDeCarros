@@ -791,7 +791,7 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
             fscanf(hist, "%[^\t]\t%[^\n]\n", pula, data_ini);
             fscanf(hist, "%[^\t]\t%[^\n]\n", pula, data_fim);
 
-            duracao = data_para_num(data_fim) - data_para_num(data_ini);
+            duracao = data_para_num(data_fim) - data_para_num(data_ini) + 1;
 
             // ==================================================
             // dados do carro alugado:

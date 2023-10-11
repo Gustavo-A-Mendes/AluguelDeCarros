@@ -84,7 +84,7 @@ void aluguel_imprime(Aluguel *aluguel)
     printf("%-10s\t%-30s\t%-15s\tR$%-15.2f\t%-10s\t%-10d\n", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO", aluguel->carro->modelo, aluguel->carro->placa, aluguel->carro->preco, aluguel->data_aluguel, aluguel->duracao);
 }
 
-void aluguel_imprime_historico(Aluguel *aluguel, int *historico)
+void  aluguel_imprime_historico(Aluguel *aluguel, int *historico)
 {   
     char escolha[10];
     int i = 0;

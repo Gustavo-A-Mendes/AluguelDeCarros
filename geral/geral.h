@@ -117,3 +117,16 @@ void alert_msg(void);
     Gera um atraso, em milissegundos, na resposta do programa
 */
 void delay(double milissegundos);
+
+char *atualiza_data_sistema(char *data);
+
+/* Função registra
+    armazena um resumo dos dados do sistema,
+    para recuperar histórico na re-execução do código
+*/
+void registra(char *data, Cliente *cli);
+
+/* Função registro_leia
+    lê o registro do sistema, e recupera os históricos de carros e clientes
+*/
+int registro_leia(Cliente **cli, Carro **carro, char **data_sis);
