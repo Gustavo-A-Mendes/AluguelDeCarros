@@ -12,7 +12,7 @@ typedef struct cliente Cliente;
 /* Função cliente_cadastra
     cria um novo cadastro de cliente, preenchendo com seus dados pessoais
 */
-Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *tel);
+Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *tel, int status);
 
 /* Função cliente_exclui
     exclui o cadastro do cliente

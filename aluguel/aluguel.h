@@ -12,7 +12,7 @@ typedef struct aluguel Aluguel;
 /* Função aluguel_cria
 
 */
-Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao);
+Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, int status);
 
 /* Função aluguel_libera
 

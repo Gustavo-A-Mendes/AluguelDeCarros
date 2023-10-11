@@ -33,11 +33,11 @@ int main(void) {
 
     // Menu principal:
     do {
-        op1 = menu_principal();
+        op1 = menu_principal(clientes);
         if (op1 == '1')
             clientes = menu_cliente(clientes, carros);
         else if (op1 == '2')
-            carros = menu_carro(carros);
+            carros = menu_carro(clientes, carros);
         
     } while (op1 != '3');
     

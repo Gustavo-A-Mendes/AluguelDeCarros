@@ -20,7 +20,7 @@ struct cliente
     Aluguel *ultimo_aluguel;
 };
 
-Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *tel)
+Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *tel, int status)
 {
     // aloca o espaço necessário para o cliente novo:
     Cliente *novo_cliente = (Cliente *)malloc(sizeof(Cliente));
@@ -43,7 +43,7 @@ Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *te
     novo_cliente->documento = realoca_string(novo_cliente->documento);
     strcpy(novo_cliente->telefone, tel);
     novo_cliente->telefone = realoca_string(novo_cliente->telefone);
-    novo_cliente->status = 0;   /* cadastra sem aluguel ativo */
+    novo_cliente->status = status;   /* cadastra sem aluguel ativo */
 
     // ==================================================
     // encadea o endereço dos clientes:
@@ -178,9 +178,9 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
         scanf("%d", &duracao);
         while (getchar() != '\n');
 
-        cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao);
-        cliente_atualiza_historico(1, cli);
+        cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao, 1);
         cli->status = 1;
+        cliente_atualiza_historico(1, cli);
         alert(-11);
     }
     else
@@ -396,14 +396,15 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                 {
                     while (aluguel_lista != NULL)
                     {
-                        if(aluguel_imprime_historico(aluguel_lista)){
-                        aluguel_lista = aluguel_lista->prox_aluguel;
-                        delay(1000);
+                        if (aluguel_imprime_historico(aluguel_lista))
+                        {
+                            aluguel_lista = aluguel_lista->prox_aluguel;
+                            // delay(1000);
                         }
                     }
                 }
                 else
-                    alert(-10);
+                    alert(-10);     /* Não há aluguéis */
                 break;
             
             case '4':
@@ -614,7 +615,6 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
     Cliente *cliente_aux;
     Aluguel *aluguel_aux;
     char *data_final;
-    printf("oi\n");
 
     for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
     {
@@ -626,7 +626,7 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
             {
                 cliente_aux->status = 0;
                 aluguel_finaliza(aluguel_aux);
-                cliente_atualiza_historico(1, cli);
+                cliente_atualiza_historico(1, cliente_aux);
             }
         }
     }
@@ -688,31 +688,29 @@ void cliente_atualiza_historico(int tag, Cliente *cli)
         alert(-7);  /* Arquivo não encontrado */
         return;
     }
-    rewind(hist);
 
     // ==================================================
     // atualização dos dados modificado:
-    if (tag == 0)       /* atualiza os dados pessoais */
-    {
-        // escreve dados pessoais no arquivo:
-        fprintf(hist, "===== DADOS DO CLIENTE =====\n");
-        fprintf(hist, "NOME:\t%s\n", cli->nome);
-        fprintf(hist, "CPF:\t%s\n", cli->documento);
-        fprintf(hist, "TELEFONE:\t%s\n", cli->telefone);
-        fprintf(hist, "STATUS:\t%d\n", cli->status);
+    
+    // atualização dos dados pessoais:
+    fprintf(hist, "===== DADOS DO CLIENTE =====\n");
+    fprintf(hist, "NOME:\t%s\n", cli->nome);
+    fprintf(hist, "CPF:\t%s\n", cli->documento);
+    fprintf(hist, "TELEFONE:\t%s\n", cli->telefone);
+    fprintf(hist, "STATUS:\t%d\n", cli->status);
 
-        fprintf(hist,"%%\n");     /* Indicador de parada, para busca do histórico */
-        
-    }        
-    else if (tag == 1)  /* atualiza a lista de histórico */
+    fprintf(hist,"%%\n");     /* Indicador de parada, para busca do histórico */
+    
+    if (tag == 1)  /* atualiza a lista de histórico */
     {
-        while (fgetc(hist) != '%');     /* pula a sessão dos dados do cliente */
+        // while (fgetc(hist) != '%');     /* pula a sessão dos dados do cliente */
+
         // escreve os dados no arquivo, após a sessão dos dados do cliente:
-        fprintf(hist,"\n");     /* pula a linha do '%' */
-        // fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
-        // Aluguel *aluguel_aux = cli->ultimo_aluguel;
-        // aluguel_atualiza_historico(aluguel_aux, hist);  
-        printf("oi\n"); delay(1000);
+        // fprintf(hist,"\n");     /* pula a linha do '%' */
+        fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
+        Aluguel *aluguel_aux = cli->ultimo_aluguel;
+        aluguel_atualiza_historico(aluguel_aux, hist);  
+        // printf("oi\n"); delay(1000);
     }
 
     fclose(hist);
@@ -757,7 +755,7 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
 
     // printf("%s\t%s\t%s\n\n", cli_nome, cli_doc, cli_tel);
     // delay(1000);        /* atraso para verificar resposta */
-    cli = cliente_cadastra(0, cli, cli_nome, cli_doc, cli_tel);
+    cli = cliente_cadastra(0, cli, cli_nome, cli_doc, cli_tel, status);
     
     // ==================================================
     // atualiza a lista do histórico de aluguel:
@@ -792,7 +790,7 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
             
             // ==================================================
             // adiciona o aluguel na pilha:
-            cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aux, data_ini, duracao);
+            cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aux, data_ini, duracao, status_aluguel);
         }
     }
 

@@ -38,7 +38,7 @@ void cabecalho(char *titulo)
     printf(">>> [0] PASSAR TEMPO\n\n");
 }
 
-int menu_principal(void){
+int menu_principal(Cliente* cli){
     int op1;
     
     system(clear());
@@ -54,6 +54,7 @@ int menu_principal(void){
     switch (op1) {
         case '0':
             data_hoje = passa_tempo(data_hoje);
+            cliente_atualiza_aluguel(cli, data_hoje);
 
             break;
 
@@ -181,7 +182,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                     }
 
                     // ponteiro auxiliar endereça para lista com novo cadastro:
-                    cli = cliente_cadastra(1, cli, nome, doc, tel);
+                    cli = cliente_cadastra(1, cli, nome, doc, tel, 0);
 
                     total_atual = cliente_total(cli);   /* total de clientes após o cadastro */
 
@@ -315,7 +316,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
     return cli;
 }
 
-Carro *menu_carro(Carro *carro)
+Carro *menu_carro(Cliente *cli, Carro *carro)
 {
     int op3;
 

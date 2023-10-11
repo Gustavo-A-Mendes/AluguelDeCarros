@@ -14,7 +14,7 @@ struct aluguel
     Aluguel *prox_aluguel;
 };
 
-Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
+Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, int status)
 {
     // aloca o espaço necessário para o aluguel novo:
     Aluguel *novo_aluguel = (Aluguel*)malloc(sizeof(Aluguel));
@@ -31,7 +31,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
     // insere os dados do cliente:
     strcpy(novo_aluguel->data_aluguel, data);
     novo_aluguel->duracao = duracao;
-    novo_aluguel->status_aluguel = 1;
+    novo_aluguel->status_aluguel = status;
     novo_aluguel->carro = carro;
     carro_alugado(novo_aluguel->carro);
     
@@ -90,14 +90,21 @@ int aluguel_imprime_historico(Aluguel *aluguel)
     int i = 0;
     while (1)
     {
+        // não entendi. Quer passar o "folhear" histórico ao apertar ENTER?
         aluguel_imprime(aluguel);
-        printf("\nPressione 'enter' para feixar o histórico.");
+        printf("\nPressione ENTER para feixar o historico.");
         while ((escolha[i] = getchar()) != '\n') i++;
         escolha[i] = '\0';
-        if (strlen(escolha) > 0){
+        if (strlen(escolha) > 0)
+        {
+            alert(1);
+            // printf(TXT_yellow"\nOpção invalida. Pressione ENTER para voltar!\n"TXT_reset);
             return 1; 
-        }else{
-            printf(TXT_yellow"\nOpção inválida. Pressione 'enter' para voltar!\n"TXT_reset);    
+        }
+        else
+        {
+            alert(0);   /* retorna a pagina anterior, sem mensagem de erro */
+            break;   
         }
     }
 }

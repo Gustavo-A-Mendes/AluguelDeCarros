@@ -1,3 +1,6 @@
 Não ta voltando pro menu quando aperta enter na hora de pedir o id do cliente pra alugar o carro  (cliente>>aluga>>cliente existente>>voltar)
 
-o histórico não está sendo atualizado quando feito um aluguel
+o histórico não está sendo atualizado quando feito um aluguel [FUNCIONANDO]
+
+Precisa ajeitar a forma como o "cliente_recupera_histórico" reescreve os alugueis
+

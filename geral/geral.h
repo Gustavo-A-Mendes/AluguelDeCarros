@@ -19,7 +19,7 @@ void cabecalho(char *titulo);
 /* Função menu_principal 
     Exibe o menu principal
 */
-int menu_principal(void);
+int menu_principal(Cliente *cli);
 
 /* Função menu_cliente
     Exibe o menu cliente
@@ -29,7 +29,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro);
 /* Função menu_carro
     Exibe o menu carro
 */
-Carro *menu_carro(Carro *carro);
+Carro *menu_carro(Cliente *cli, Carro *carro);
 
 /* Função data_para_num
     Converte uma string de data em seu correspondente numérico
