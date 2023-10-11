@@ -163,7 +163,7 @@ char *cliente_doc(Cliente *cli)
 
 void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
 {
-    Carro *carro_aluga = carro_lista(carro);
+    Carro *carro_aluga = carro_lista_disponivel(carro);
     printf("%s\n", carro_aluga->modelo);
     char *data;
     int duracao;

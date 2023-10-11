@@ -24,6 +24,11 @@ Carro *carro_busca(Carro *carro, char *modelo, int tipo);
 */
 void carro_libera(Carro *carro);
 
+/* Função carro_lista
+
+*/
+Carro *carro_lista(Carro *carro);
+
 /* Função carro_aluga
 
 */
@@ -32,7 +37,7 @@ void carro_libera(Carro *carro);
 /* Função carro_lista
 
 */
-Carro *carro_lista(Carro *carro);
+Carro *carro_lista_disponivel(Carro *carro);
 
 /* Função carro_disponivel
 
@@ -54,3 +59,12 @@ Carro *carro_ordena(Carro *carro, char *modelo);
 */
 Carro *carro_leia(Carro *carro);
 
+/* Função carro_imprime
+
+*/
+void carro_imprime(Carro *carro, int *qtd_carros);
+
+/* Função carro_coonculta
+
+*/
+int carro_consulta(Carro *carro, Carro *carro_consultado);
