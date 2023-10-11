@@ -52,7 +52,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, i
         novo_aluguel->prox_aluguel = ref->prox_aluguel;
         ref->prox_aluguel = novo_aluguel;
     }
-    printf(":)\n"); delay(500);
+    // printf(":)\n"); delay(500);
     return aluguel;
 }
 
@@ -120,13 +120,13 @@ void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl)
     {
         fprintf(fl, "STATUS:\t%d\n", aluguel_aux->status_aluguel);
         fprintf(fl, "PRAZO ALUGUEL:\n");
-        fprintf(fl, " -> DE:\t%s\n", aluguel_aux->data_aluguel);
-        fprintf(fl, " -> ATE:\t%s\n", prazo(aluguel_aux->data_aluguel, aluguel_aux->duracao));
+        fprintf(fl, "-> DE:\t%s\n", aluguel_aux->data_aluguel);
+        fprintf(fl, "-> ATE:\t%s\n", prazo(aluguel_aux->data_aluguel, aluguel_aux->duracao-1));
         fprintf(fl, "MODELO:\t%s\n", aluguel_aux->carro->modelo);
         fprintf(fl, "PLACA:\t%s\n", aluguel_aux->carro->placa);
         fprintf(fl, "PRECO:\t%.2f\n", aluguel_aux->carro->preco);
 
-        fprintf(fl,"==================================================\n");
+        fprintf(fl,"==================================================");
     }
 }
 
@@ -149,7 +149,7 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 char *aluguel_data_fim(Aluguel *aluguel)
 {
     int data_inicio = data_para_num(aluguel->data_aluguel);
-    char *data_fim = num_para_data(data_inicio + aluguel->duracao);
+    char *data_fim = num_para_data(data_inicio + aluguel->duracao - 1);
     return data_fim;
 }
 

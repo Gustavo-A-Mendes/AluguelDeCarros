@@ -228,7 +228,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 }
                 else
                 {
-                    alert(0);   /* volta ao menu, sem mensagem de erro */
+                    alert(-3);   /* cadastro cancelado */
                 }
                 delay(ATRASO);
                 break;
@@ -527,7 +527,10 @@ int teste_formato(char *str)
         }
     }
     if (negativo == 1)
+    {
+        printf("oi\n");
         return -1;          /* é número negativo */
+    }
 
     return 1;               /* é número positivo */
 }
@@ -555,20 +558,25 @@ char *input_data(void)
     char *data = (char*)malloc(11*sizeof(char));
     int i;
 
-    printf("Digite o dia: ");
     i = 0;
-    while ((str_dia[i] = getchar()) != '\n') i++;
-    str_dia[i] = '\0';
-    
-    printf("Digite o mes: ");
-    i = 0;
-    while ((str_mes[i] = getchar()) != '\n') i++;
-    str_mes[i] = '\0';
+    while ((data[i] = getchar()) != '\n') i++;
+    data[i] = '\0';
 
-    printf("Digite o ano: ");
-    i = 0;
-    while ((str_ano[i] = getchar()) != '\n') i++;
-    str_ano[i] = '\0';
+    sscanf(data, "%[^/]/%[^/]/%[^\n]\n", str_dia, str_mes, str_ano);
+    // printf("Digite o dia: ");
+    // i = 0;
+    // while ((str_dia[i] = getchar()) != '\n') i++;
+    // str_dia[i] = '\0';
+    
+    // printf("Digite o mes: ");
+    // i = 0;
+    // while ((str_mes[i] = getchar()) != '\n') i++;
+    // str_mes[i] = '\0';
+
+    // printf("Digite o ano: ");
+    // i = 0;
+    // while ((str_ano[i] = getchar()) != '\n') i++;
+    // str_ano[i] = '\0';
 
     if (teste_formato(str_dia) == 1 && teste_formato(str_mes) == 1 && teste_formato(str_ano) == 1)
     {
@@ -643,16 +651,23 @@ char *passa_tempo(char *data_antiga)
             case '2':
                 system(clear());
 
-                printf("Insira a nova data\n");
+                printf("Insira a nova data [dd/mm/aaaa]:\n");
                 data_nova = input_data();
-                if (compara_data(data_antiga, data_nova) != -1)
+                if (data_nova != NULL)
                 {
-                    alert(-1);   /* data atualizada */
-                    return data_nova;
+                    if (compara_data(data_antiga, data_nova) != -1)
+                    {
+                        alert(-1);   /* data atualizada */
+                        return data_nova;
+                    }
+                    alert(-9);  /*não pode ir pro passado */
+                    free(data_nova);
+                    return data_antiga;
                 }
-                alert(-9);  /*não pode ir pro passado */
-                free(data_nova);
-                return data_antiga;
+                else
+                {
+                    alert(2);   /* formato inválido */
+                }
                 break;
 
             case '3':
@@ -701,7 +716,7 @@ void alert_msg(void)
     // alerta de processo:
     else if (alert_cod == -1) printf(TXT_green"\nData atualizada!"TXT_reset);
     else if (alert_cod == -2) printf(TXT_red"\nO cliente possui um aluguel ativo!"TXT_reset);
-    else if (alert_cod == -3) printf(TXT_red"\nCadastro falhou!"TXT_reset);
+    else if (alert_cod == -3) printf(TXT_red"\nCadastro cancelado!"TXT_reset);
     else if (alert_cod == -4) printf(TXT_green"\nCadastro apagado!"TXT_reset);
     else if (alert_cod == -5) printf(TXT_red"\nNao ha clientes cadastrados no sistema."TXT_reset);
     else if (alert_cod == -6) printf(TXT_red"\nERRO! Cliente nao encontrado."TXT_reset);

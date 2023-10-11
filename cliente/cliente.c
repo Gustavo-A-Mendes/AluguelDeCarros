@@ -168,23 +168,30 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
     char *data;
     int duracao;
     
-    printf("Qual a Data do aluguel?\n");
+    printf("Qual a Data do aluguel [dd/mm/aaaa]?\n");
     data = input_data();
 
-    // data_hoje = num_para_data(hoje);
-    if (compara_data(data_hoje, data) != -1)     /* data do aluguel não pode ser antes da data atual */
+    if (data != NULL)
     {
-        printf("Qual a duracao do aluguel?\n");
-        scanf("%d", &duracao);
-        while (getchar() != '\n');
+        // data_hoje = num_para_data(hoje);
+        if (compara_data(data_hoje, data) != -1)     /* data do aluguel não pode ser antes da data atual */
+        {
+            printf("Qual a duracao do aluguel?\n");
+            scanf("%d", &duracao);
+            while (getchar() != '\n');
 
-        cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao, 1);
-        cli->status = 1;
-        cliente_atualiza_historico(1, cli);
-        alert(-11);
+            cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao, 1);
+            cli->status = 1;
+            cliente_atualiza_historico(1, cli);
+            alert(-11); /* aluguel criado */
+        }
+        else
+            alert(-9);  /* Data inválida */
     }
     else
-        alert(-9);  /* Data inválida */
+    {
+        alert(2);   /* formato inválido */
+    }
 }
 
 void cliente_imprime(Cliente *cli)
@@ -377,9 +384,15 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
         printf(">>>[5] Voltar ao Menu\n");
         
         alert_msg();
-        printf("\nEscolha uma opcao: ");
-        if (vendo_historico == 0)
+        if (vendo_historico == 0) 
+        {
+            printf("\nEscolha uma opcao: ");
             op_cons = teste_input();
+        }
+        else
+        {
+            printf("\nEscolha uma opcao: 3");
+        }
 
         switch (op_cons)
         {
@@ -399,8 +412,10 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                     aluguel_imprime_historico(aluguel_lista, &vendo_historico);
                 }
                 else
+                {
                     vendo_historico = 0;
                     alert(-10);     /* Não há aluguéis */
+                }
                 break;
             
             case '4':
@@ -695,7 +710,7 @@ void cliente_atualiza_historico(int tag, Cliente *cli)
     fprintf(hist, "TELEFONE:\t%s\n", cli->telefone);
     fprintf(hist, "STATUS:\t%d\n", cli->status);
 
-    fprintf(hist,"%%\n");     /* Indicador de parada, para busca do histórico */
+    fprintf(hist,"%%");     /* Indicador de parada, para busca do histórico */
     
     if (tag == 1)  /* atualiza a lista de histórico */
     {
@@ -703,7 +718,7 @@ void cliente_atualiza_historico(int tag, Cliente *cli)
 
         // escreve os dados no arquivo, após a sessão dos dados do cliente:
         // fprintf(hist,"\n");     /* pula a linha do '%' */
-        fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
+        fprintf(hist, "\n===== HISTORICO DE ALUGUEL =====\n");
         Aluguel *aluguel_aux = cli->ultimo_aluguel;
         aluguel_atualiza_historico(aluguel_aux, hist);  
         // printf("oi\n"); delay(1000);
@@ -742,6 +757,8 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
     // ==================================================
     // leitura do arquivo, iniciando pelos dados do cliente:
     char pula[100];             /* usado para pular partes indesejadas do arquivo */
+    char c;
+    // rewind(hist);
     fgets(pula, 100, hist);     /* pula o cabeçalho do cliente */
     
     fscanf(hist, "%[^\t]\t%[^\n]\n", pula, cli_nome);
@@ -752,13 +769,14 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
     // printf("%s\t%s\t%s\n\n", cli_nome, cli_doc, cli_tel);
     // delay(1000);        /* atraso para verificar resposta */
     cli = cliente_cadastra(0, cli, cli_nome, cli_doc, cli_tel, status);
+    fgets(pula, 100, hist);     /* pula linha do '%' */
     
     // ==================================================
     // atualiza a lista do histórico de aluguel:
     if (!feof(hist))
     {
+
         // escreve os dados no arquivo, após a sessão dos dados do cliente:
-        fgets(pula, 100, hist);     
         fgets(pula, 100, hist);     /* pula cabeçalho do histórico */
 
         while (!feof(hist))     /* lê todo o histórico */
@@ -784,10 +802,11 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
             // printf(":P\n"); delay(500);
             
             fgets(pula, 100, hist);
-            fgets(pula, 100, hist);
+            // fgets(pula, 100, hist);
             
             // ==================================================
             // adiciona o aluguel na pilha:
+
             cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aux, data_ini, duracao, status_aluguel);
         }
 
@@ -819,7 +838,7 @@ void cliente_apaga_historico(Cliente *cli)
 
 void cliente_registra(Cliente *cli)
 {
-    FILE *fl = fopen("./cliente/registro.txt", "wt");
+    FILE *fl = fopen("registro.txt", "wt");
     // verifica se o arquivo foi aberto corretamente:
     if (fl == NULL) 
     {
@@ -859,7 +878,7 @@ Cliente *cliente_ordena(Cliente *cli, char *nome)
 
 Cliente *cliente_leia(Cliente *cli, Carro *carro)
 {
-    FILE *fl = fopen("./cliente/registro.txt", "rt");
+    FILE *fl = fopen("registro.txt", "rt");
     // verifica se o arquivo foi aberto corretamente:
     if (fl == NULL) 
     {

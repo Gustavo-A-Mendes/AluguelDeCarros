@@ -60,6 +60,9 @@ char *prazo(char *data, long long duracao);
 
 /* Função compara
     Faz a comparação entre as strings
+    Faz a comparação entre duas datas.
+    Retorna 1 se o primeiro nome vem antes,
+    -1 se for a segundo, e 0 se forem iguais.
 */
 int compara(char *nome, char *nome_busca);
 
