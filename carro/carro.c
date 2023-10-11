@@ -441,7 +441,7 @@ void carro_atualiza_galeria(Carro *carro)
     char nome_arquivo[60] = "./carro/galeria.txt";
     Carro *carro_aux;
 
-    FILE *galeria = fopen(nome_arquivo, "r+");
+    FILE *galeria = fopen(nome_arquivo, "wt");
     if (galeria == NULL)
     {
         alert(-7);
@@ -453,11 +453,13 @@ void carro_atualiza_galeria(Carro *carro)
     for(carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro){
         fprintf(galeria, "%s\t%s\t%.2f\t%d\n", carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade);
     }
+
+    fclose(galeria);
 }
 
 void carro_exclui(Carro *carro, Carro *carro_consultado)
 {
-    int i, op;
+    int op;
     Carro *carro_aux;
 
     while(1)
@@ -470,17 +472,24 @@ void carro_exclui(Carro *carro, Carro *carro_consultado)
 
         if (op == 'S')
         {
-            for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
-            {
-                if (!strncmp(carro_aux->placa, carro_consultado->placa, strlen(carro_aux->placa)))
-                {
+            //for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
+            //{
+             
+                if (carro_consultado == carro)
+                    carro = carro_consultado->prox_carro;
+                else
                     carro_consultado->ant_carro->prox_carro = carro_consultado->prox_carro;
-                    carro_consultado->prox_carro->ant_carro = carro_consultado->ant_carro;
-                    free(carro_consultado);
-                    carro_atualiza_galeria(carro);
-                    return;
-                }
-            } 
+                if(carro_consultado->prox_carro != NULL)
+                    carro_consultado->prox_carro->ant_carro = carro_consultado->ant_carro;  
+                
+                carro_atualiza_galeria(carro);
+                free(carro_consultado->modelo);
+                free(carro_consultado->placa);
+                free(carro_consultado);
+                alert(-14);
+
+                break;;
+            //} 
         }
         else if (op == 'N')
             break;
