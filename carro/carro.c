@@ -108,7 +108,7 @@ Carro *carro_lista(Carro *carro)
             Carro *carro_aux;
             for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
             {
-                printf("%d\t%-30s\t%-10s\tR$%-10.2f\t%-10s\n", id_carro, carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro->disponibilidade ? "Disponivel" : "Indisponivel");
+                printf("%d\t%-30s\t%-10s\tR$%-10.2f\t%-10s\n", id_carro, carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
                 id_carro++;
             }
 

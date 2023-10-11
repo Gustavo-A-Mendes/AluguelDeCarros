@@ -396,9 +396,10 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                 {
                     while (aluguel_lista != NULL)
                     {
-                        aluguel_imprime(aluguel_lista);
+                        if(aluguel_imprime_historico(aluguel_lista)){
                         aluguel_lista = aluguel_lista->prox_aluguel;
                         delay(1000);
+                        }
                     }
                 }
                 else

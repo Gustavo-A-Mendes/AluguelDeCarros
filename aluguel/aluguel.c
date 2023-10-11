@@ -34,7 +34,9 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao)
     novo_aluguel->status_aluguel = 1;
     novo_aluguel->carro = carro;
     carro_alugado(novo_aluguel->carro);
-
+    
+    // carro->disponibilidade = 0;
+    // printf("%d", carro->disponibilidade);
     // ==================================================
     // encadea o endereço dos alugueis:
 
@@ -72,7 +74,7 @@ void aluguel_libera(Aluguel *aluguel)
 }
 
 void aluguel_imprime(Aluguel *aluguel)
-{
+{   
     printf("%-10s\t%-30s\t%-15s\t%-15s\t%-10s\t%-10s\n", "STATUS", "MODELO", "PLACA", "PRECO", "DATA ALUGUEL", "DURACAO");
     
     // printf("%-10s\t", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO");
@@ -80,6 +82,24 @@ void aluguel_imprime(Aluguel *aluguel)
     // printf("\t%-10s\t%-10d\n", aluguel->data_aluguel, aluguel->duracao);
     
     printf("%-10s\t%-30s\t%-15s\tR$%-15.2f\t%-10s\t%-10d\n", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO", aluguel->carro->modelo, aluguel->carro->placa, aluguel->carro->preco, aluguel->data_aluguel, aluguel->duracao);
+}
+
+int aluguel_imprime_historico(Aluguel *aluguel)
+{   
+    char escolha[10];
+    int i = 0;
+    while (1)
+    {
+        aluguel_imprime(aluguel);
+        printf("\nPressione 'enter' para feixar o histórico.");
+        while ((escolha[i] = getchar()) != '\n') i++;
+        escolha[i] = '\0';
+        if (strlen(escolha) > 0){
+            return 1; 
+        }else{
+            printf(TXT_yellow"\nOpção inválida. Pressione 'enter' para voltar!\n"TXT_reset);    
+        }
+    }
 }
 
 void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl)
