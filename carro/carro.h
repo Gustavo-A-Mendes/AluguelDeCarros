@@ -72,4 +72,14 @@ int carro_consulta(Carro *carro, Carro *carro_consultado);
 /* Função carro_edita
 
 */
-carro_edita(carro, carro_consultado);
+void carro_edita(Carro  *carro, Carro *carro_consultado);
+
+/* Função carro_atualiza_galeria
+
+*/
+void carro_atualiza_galeria(Carro *carro);
+
+/* Função carro_exclui
+
+*/
+void carro_exclui(Carro *carro, Carro *carro_consultado);
