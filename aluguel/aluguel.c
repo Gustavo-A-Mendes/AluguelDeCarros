@@ -137,7 +137,7 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 
     // O critério de parada será o fim da fila ou encontrar 
     // uma data que venha depois:
-	while (aluguel_aux != NULL && compara_data(aluguel->data_aluguel, data_inicio) == -1)		/* verifica "P" chegou na posição */
+	while (aluguel_aux != NULL && compara_data(aluguel->data_aluguel, data_inicio) < 0)		/* verifica "P" chegou na posição */
 	{
 		ref = aluguel_aux;		                    /* "ref" aponta para o valor atual de "aluguel_aux" */
 		aluguel_aux = aluguel_aux->prox_aluguel;	/* "aluguel_aux" passa a apontar para o próximo valor */

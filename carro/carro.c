@@ -260,7 +260,7 @@ Carro *carro_ordena(Carro *carro, char *modelo)
 	Carro *carro_aux = carro;			/* cria um ponteiro auxiliar "P", inicializada com a lista "cli" */
     // O critério de parada será o fim da fila ou encontrar 
     // um nome que venha depois, na ordem alfabética:
-	while (carro_aux != NULL && compara(carro_aux->modelo, modelo) == -1)		/* verifica "carro_aux" chegou na posição */
+	while (carro_aux != NULL && compara(carro_aux->modelo, modelo) < 0)		/* verifica "carro_aux" chegou na posição */
 	{
 		ref = carro_aux;		        /* "ref" aponta para o valor atual de "P" */
 		carro_aux = carro_aux->prox_carro;	    /* "carro_aux" passa a apontar para o próximo valor */
