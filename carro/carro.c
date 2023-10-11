@@ -371,7 +371,7 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
         printf("==========================================================================================\n");
         printf("DADOS DO CARRO:\n");
         printf("==========================================================================================\n");
-        printf("%-3s\t%-30s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
+        printf("%-30s\t%-10s\t%-10s\t%-10s\n", "MODELO", "PLACA", "PRECO", "STATUS");
         printf("%-30s\t%-10s\tR$%-10.2f\t%-10s\n", carro_consultado->modelo, carro_consultado->placa, carro_consultado->preco, carro_consultado->disponibilidade ? "Disponivel" : "Indisponivel");
         printf("\n==========================================================================================\n");
         
@@ -388,12 +388,12 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
         switch (op_cons)
         {
             case '1':
-                // carro_edita(carro, carro_consultado);
+                carro_edita(carro, carro_consultado);
                 break;
 
             case '2':
-                // carro_exclui(carro_consultado, carro_consultado->placa);
-                break;
+                carro_exclui(carro, carro_consultado);
+                return 0;
 
             case '3':
                 alert(0);
@@ -407,5 +407,84 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
                 alert(1);
                 break;   
         }
+    }
+}
+
+
+void carro_edita(Carro *carro, Carro *carro_consultado)
+{
+    int i;
+    char novo_preco[10];
+
+    system(clear());
+
+    printf("Deixe em branco para manter o dado salvo:\n");
+    printf("==================================================\n");
+
+    printf("Digite o novo nome:\n");
+    printf("Antigo: R$%.2f\n", carro_consultado->preco);
+    printf("Novo: ");
+
+    i = 0;
+    while ((novo_preco[i] = getchar()) != '\n') i++;
+    novo_preco[i] = '\0';
+    if (strlen(novo_preco) > 0)
+    {
+        carro_consultado->preco = atof(novo_preco);
+    }
+    carro_atualiza_galeria(carro);
+    alert(-13);
+}
+
+void carro_atualiza_galeria(Carro *carro)
+{
+    char nome_arquivo[60] = "./carro/galeria.txt";
+    Carro *carro_aux;
+
+    FILE *galeria = fopen(nome_arquivo, "r+");
+    if (galeria == NULL)
+    {
+        alert(-7);
+        return;
+    }
+
+    fprintf(galeria, "%s\t%s\t%s\t%s\n", "MODELO", "PLACA", "PRECO", "STATUS");
+
+    for(carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro){
+        fprintf(galeria, "%s\t%s\t%.2f\t%d\n", carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade);
+    }
+}
+
+void carro_exclui(Carro *carro, Carro *carro_consultado)
+{
+    int i, op;
+    Carro *carro_aux;
+
+    while(1)
+    {
+        system(clear());
+
+        alert_msg();
+        printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
+        op = teste_input();
+
+        if (op == 'S')
+        {
+            for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
+            {
+                if (!strncmp(carro_aux->placa, carro_consultado->placa, strlen(carro_aux->placa)))
+                {
+                    carro_consultado->ant_carro->prox_carro = carro_consultado->prox_carro;
+                    carro_consultado->prox_carro->ant_carro = carro_consultado->ant_carro;
+                    free(carro_consultado);
+                    carro_atualiza_galeria(carro);
+                    return;
+                }
+            } 
+        }
+        else if (op == 'N')
+            break;
+        else
+            alert(1);
     }
 }
