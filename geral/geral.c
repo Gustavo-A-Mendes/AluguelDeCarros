@@ -755,3 +755,27 @@ void delay(double milissegundos)
     // looping till required time is not achieved
     while (milissegundos > clock() - tempo_inicial);
 }
+
+void registra(int data_hoje, Cliente *cli)
+{
+    FILE *fl = fopen("registro.txt", "wt");
+    // verifica se o arquivo foi aberto corretamente:
+    if (fl == NULL) 
+    {
+        printf("\nArquivo nao encontrado!\n");
+        return; // erro ao acessar o arquivo
+    }
+
+    // ==================================================
+    // escreve cabeçalho:
+    fprintf(fl, "%s\t%s\t%s\n", "NOME", "CPF", "STATUS");
+
+    // ==================================================
+    // escreve os dados dos clientes:
+    Cliente *cliente_aux;
+    for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
+    {
+        fprintf(fl, "%s\t%s\t%d\n", cliente_aux->nome, cliente_aux->documento, cliente_aux->status);
+    }
+    fclose(fl);
+}
