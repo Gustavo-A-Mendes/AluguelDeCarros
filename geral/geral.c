@@ -219,11 +219,17 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
 
                 // printf("\n:)\n");
                 // Inicia o cadastro do aluguel:
-                if (cliente_aux->status == 0)
-                    cliente_aluga(cliente_aux, carro, data_hoje);
+                if (cliente_aux != NULL)
+                {
+                    if (cliente_aux->status == 0)
+                        cliente_aluga(cliente_aux, carro, data_hoje);
+                    else
+                        alert(-2);  /* há um aluguel ativo */
+                }
                 else
-                    alert(-2);  /* há um aluguel ativo */
-
+                {
+                    alert(0);   /* volta ao menu, sem mensagem de erro */
+                }
                 delay(ATRASO);
                 break;
             
@@ -685,7 +691,7 @@ void alert_msg(void)
     if (alert_cod == 0) printf("\n");
     
     // alerta de formato: 
-    else if (alert_cod == 1) printf(TXT_red"\nInsira uma opcao valida!"TXT_reset);
+    else if (alert_cod == 1) printf(TXT_yellow"\nInsira uma opcao valida!"TXT_reset);
     else if (alert_cod == 2) printf(TXT_red"\nFormato invalido!"TXT_reset);
     else if (alert_cod == 3) printf(TXT_red"\nErro! Tamanho maximo excedido."TXT_reset);
     else if (alert_cod == 4) printf(TXT_yellow"\nTamanho invalido! O CPF deve conter 11 digitos."TXT_reset);

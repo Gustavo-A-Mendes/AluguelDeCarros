@@ -341,7 +341,7 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
 /* FALTA TERMINAR. ADICIONAR FERRAMENTAS DE EDIÇÃO */
 int cliente_consulta(Cliente *cli, Cliente *consultado)
 {
-    int op_cons;
+    int op_cons, vendo_historico = 0;
     char consultado_doc[15], consultado_tel[15];
     Aluguel *aluguel_aux, *aluguel_lista;
 
@@ -378,7 +378,8 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
         
         alert_msg();
         printf("\nEscolha uma opcao: ");
-        op_cons = teste_input();
+        if (vendo_historico == 0)
+            op_cons = teste_input();
 
         switch (op_cons)
         {
@@ -391,19 +392,14 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                 return 0;
             
             case '3':
+                vendo_historico = 1;
                 aluguel_lista = consultado->ultimo_aluguel;
                 if (aluguel_lista != NULL)
                 {
-                    while (aluguel_lista != NULL)
-                    {
-                        if (aluguel_imprime_historico(aluguel_lista))
-                        {
-                            aluguel_lista = aluguel_lista->prox_aluguel;
-                            // delay(1000);
-                        }
-                    }
+                    aluguel_imprime_historico(aluguel_lista, &vendo_historico);
                 }
                 else
+                    vendo_historico = 0;
                     alert(-10);     /* Não há aluguéis */
                 break;
             
@@ -784,14 +780,17 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
             fscanf(hist, "%[^\t]\t%[^\n]\n", pula, modelo);
             fscanf(hist, "%[^\t]\t%[^\n]\n", pula, placa);
             fscanf(hist, "%[^\t]\t%f\n", pula, &preco);
-            carro_aux = carro_busca(carro, placa);
+            carro_aux = carro_busca(carro, placa, 1);
+            // printf(":P\n"); delay(500);
             
+            fgets(pula, 100, hist);
             fgets(pula, 100, hist);
             
             // ==================================================
             // adiciona o aluguel na pilha:
             cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aux, data_ini, duracao, status_aluguel);
         }
+
     }
 
     fclose(hist);
@@ -887,6 +886,7 @@ Cliente *cliente_leia(Cliente *cli, Carro *carro)
         {   
             fscanf(fl, "%[^\t]\t%[^\t]\t%[^\n]\n", nome, doc, status);
             cli = cliente_recupera_historico(cli, carro, doc);
+            // printf(":)\n"); delay(500);
         }
     }
 

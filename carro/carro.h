@@ -17,7 +17,7 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco);
 /* Função carro_busca
 
 */
-Carro *carro_busca(Carro *carro, char *modelo);
+Carro *carro_busca(Carro *carro, char *modelo, int tipo);
 
 /* Função carro_libera
 
@@ -43,11 +43,6 @@ void carro_disponivel(Carro *carro);
 
 */
 void carro_alugado(Carro *carro);
-
-/* Função carro_busca
-
-*/
-Carro *carro_busca(Carro *carro, char *placa);
 
 /* Função carro_ordena
 

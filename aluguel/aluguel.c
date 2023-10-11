@@ -52,7 +52,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, i
         novo_aluguel->prox_aluguel = ref->prox_aluguel;
         ref->prox_aluguel = novo_aluguel;
     }
-
+    printf(":)\n"); delay(500);
     return aluguel;
 }
 
@@ -84,29 +84,33 @@ void aluguel_imprime(Aluguel *aluguel)
     printf("%-10s\t%-30s\t%-15s\tR$%-15.2f\t%-10s\t%-10d\n", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO", aluguel->carro->modelo, aluguel->carro->placa, aluguel->carro->preco, aluguel->data_aluguel, aluguel->duracao);
 }
 
-int aluguel_imprime_historico(Aluguel *aluguel)
+void aluguel_imprime_historico(Aluguel *aluguel, int *historico)
 {   
     char escolha[10];
     int i = 0;
-    while (1)
+
+    while (aluguel != NULL)
     {
-        // não entendi. Quer passar o "folhear" histórico ao apertar ENTER?
         aluguel_imprime(aluguel);
-        printf("\nPressione ENTER para feixar o historico.");
-        while ((escolha[i] = getchar()) != '\n') i++;
-        escolha[i] = '\0';
-        if (strlen(escolha) > 0)
-        {
-            alert(1);
-            // printf(TXT_yellow"\nOpção invalida. Pressione ENTER para voltar!\n"TXT_reset);
-            return 1; 
-        }
-        else
-        {
-            alert(0);   /* retorna a pagina anterior, sem mensagem de erro */
-            break;   
-        }
+        aluguel = aluguel->prox_aluguel;
     }
+
+    printf("\nPressione ENTER para fechar o historico.");
+    while ((escolha[i] = getchar()) != '\n') i++;
+    escolha[i] = '\0';
+    
+    if (strlen(escolha) > 0)
+    {
+        alert(1);
+        // printf(TXT_yellow"\nOpção invalida. Pressione ENTER para voltar!\n"TXT_reset);
+        // return 1; 
+    }
+    else
+    {
+        *historico = 0;
+        alert(0);   /* retorna a pagina anterior, sem mensagem de erro */
+    }
+
 }
 
 void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl)

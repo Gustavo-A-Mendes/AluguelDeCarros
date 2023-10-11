@@ -166,12 +166,12 @@ void carro_alugado(Carro *carro)
         carro->disponibilidade = 1;
 }
 
-Carro *carro_busca(Carro *carro, char *dado_busca)
+Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)
 {
     Carro *carro_aux;
     
     // verifica o tipo de dado usado para a busca [nome/CPF]:
-    int tipo = teste_formato(dado_busca);
+    // int tipo = teste_formato(dado_busca);
 
     // printf("Tipo: %d\n", tipo);
     if (tipo == 0)      /* procura o carro pelo modelo */
