@@ -758,7 +758,12 @@ void delay(double milissegundos)
     while (milissegundos > clock() - tempo_inicial);
 }
 
-void registra(int data_hoje, Cliente *cli)
+char *atualiza_data_sistema(char *data)
+{
+    data_hoje = data;
+}
+
+void registra(char *data, Cliente *cli)
 {
     FILE *fl = fopen("registro.txt", "wt");
     // verifica se o arquivo foi aberto corretamente:
@@ -769,6 +774,9 @@ void registra(int data_hoje, Cliente *cli)
     }
 
     // ==================================================
+    // armazena o dia final da execução:
+    fprintf(fl, "%s\n", data);
+
     // escreve cabeçalho:
     fprintf(fl, "%s\t%s\t%s\n", "NOME", "CPF", "STATUS");
 
@@ -780,4 +788,63 @@ void registra(int data_hoje, Cliente *cli)
         fprintf(fl, "%s\t%s\t%d\n", cliente_aux->nome, cliente_aux->documento, cliente_aux->status);
     }
     fclose(fl);
+}
+
+int registro_leia(Cliente **cli, Carro **carro, char **data_sys)
+{
+    FILE *fl = fopen("registro.txt", "rt");
+    // verifica se o arquivo foi aberto corretamente:
+    if (fl == NULL) 
+    {
+        printf("\nArquivo nao encontrado!\n");
+        return 0; // erro ao acessar o arquivo
+    }
+    // ==================================================
+    // move o cursor do arquivo para o fim
+    // e verifica se o arquivo está vazio:
+    fseek(fl, 0, SEEK_END);
+    if (ftell(fl) != 0) {
+        // retorna o cursor ao início do arquivo:
+        rewind(fl);
+
+        int i, id;
+        char nome[41], doc[15], status[15], data[11];
+
+        fscanf(fl, "%[^\n]\n", data);
+        *data_sys = data;
+        // atualiza_data_sistema(data);
+
+        /* Recuperando informações dos carros */
+        printf("Carregando dados dos Carros...\n");
+        delay(ATRASO);     /* atraso para verificar resposta */
+        
+        if((*carro = carro_leia(*carro)) != NULL)
+        {
+            printf("Dados recuperados com sucesso\n");
+            delay(ATRASO);     /* atraso para verificar resposta */
+        }
+
+        /* Recuperando dados salvos do cliente */
+        printf("Carregando dados dos Clientes...\n");
+        delay(ATRASO);     /* atraso para verificar resposta */
+        
+        // pula a linha do cabeçalho:
+        char pula[100];
+        fgets(pula, 100, fl);
+        // printf("Dados registro:\n");
+        while (!feof(fl))
+        {   
+            fscanf(fl, "%[^\t]\t%[^\t]\t%[^\n]\n", nome, doc, status);
+            *cli = cliente_recupera_historico(*cli, *carro, doc);
+        }
+
+        if(*cli  != NULL)
+            printf("Dados recuperados com sucesso\n");
+
+        delay(ATRASO);     /* atraso para verificar resposta */
+
+    }
+
+    fclose(fl);
+    return 1;
 }

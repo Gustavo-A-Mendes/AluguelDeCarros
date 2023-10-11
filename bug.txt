@@ -1,3 +1,2 @@
 
-Precisa ajeitar a forma como o "cliente_recupera_histórico" reescreve os alugueis
-
+ajeitar a formatação da impressão do aluguel (menu cliente > listar > "consultando cliente" > exibir histórico)
