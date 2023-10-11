@@ -325,6 +325,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
 Carro *menu_carro(Cliente *cli, Carro *carro)
 {
     int op3;
+    Carro *carro_aux;
 
     do {
         system(clear());
@@ -334,10 +335,10 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
 
         printf(">>> [1] ADICIONAR\n"); 
         printf(">>> [2] LISTAR\n"); //submenu: consultar disp. e consultar historico
-        printf(">>> [3] CONSULTAR CARROS\n");
+        printf(">>> [3] CONSULTAR CARROS\n"); //Consultar se está disponivel 
         printf(">>> [4] VOLTAR\n");
 
-        printf("Escolha uma opcao: ");
+        printf("\nEscolha uma opcao: ");
 
         op3 = teste_input();
 
@@ -352,6 +353,21 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
             case '2':
                 printf("\nListando Carros...\n");
                 delay(ATRASO);
+
+                system(clear());
+
+                while (1)
+                {
+                    // Listando os carros da galeria
+                    //============================================
+                    carro_aux = carro_lista(carro);
+                    if (carro_aux != NULL)
+                    {
+                        system(clear());
+                        if(carro_consulta(carro, carro_aux) == 0) break;
+                    }
+                    else break;
+                }
                 break;
 
             case '3':
