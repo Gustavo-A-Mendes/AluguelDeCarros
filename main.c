@@ -7,19 +7,15 @@
 // #include "carro.h" // pensei em nao ser possivel modificar nada do carro, ento so o cliente.c ja seria suficiente 
 // #include "cliente.c"
 
-char *data_hoje = "01/01/2023";     /* dia inicial da simulação */
 
 int main(void) {
 
     Cliente *clientes = NULL;
     Carro *carros = NULL;
     int op1 = 0, op2 = 0, op3 = 0;
-    printf("%s\n", data_hoje); delay(1000);
     
     /* Recuperando dados salvos */
-    registro_leia(&clientes, &carros, &data_hoje);
-    printf("%s\n", data_hoje); delay(1000);
-    printf("%s\n", data_hoje); delay(1000);
+    registro_leia(&clientes, &carros);
     // printf("Carregando dados dos Carros...\n");
     // delay(ATRASO);     /* atraso para verificar resposta */
     // if((carros = carro_leia(carros)) != NULL)
@@ -36,11 +32,11 @@ int main(void) {
 
     // Menu principal:
     do {
-        op1 = menu_principal(clientes, data_hoje);
+        op1 = menu_principal(clientes);
         if (op1 == '1')
-            clientes = menu_cliente(clientes, carros, data_hoje);
+            clientes = menu_cliente(clientes, carros);
         else if (op1 == '2')
-            carros = menu_carro(clientes, carros, data_hoje);
+            carros = menu_carro(clientes, carros);
         
     } while (op1 != '3');
     

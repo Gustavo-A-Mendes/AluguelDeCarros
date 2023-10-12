@@ -87,21 +87,27 @@ void carro_libera(Carro *carro)
     }
 }
 
+char *carro_modelo(Carro *carro)
+{
+    return carro->modelo;
+}
+
 void carro_imprime(Carro *carro, int *qtd_carro){
     int id_carro = 0;
     
-    system(clear());
+    // system(clear());
     // ==================================================
     // exibe cabeçalho:
+    
     printf("==========================================================================================\n");
-    printf("%-3s\t%-30s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
+    printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
     printf("==========================================================================================\n");
     // ==================================================
     // exibe as informações do cliente:
     Carro *carro_aux;
     for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
     {
-        printf("%d\t%-30s\t%-10s\tR$%-10.2f\t%-10s\n", id_carro, carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
+        printf("%d\t%-15s\t%-10s\tR$%-10.2f\t%-10s\n", id_carro, carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
         id_carro++;
     }
     *qtd_carro = id_carro;
@@ -156,47 +162,67 @@ Carro *carro_lista(Carro *carro){
 
 Carro *carro_lista_disponivel(Carro *carro)
 {
-    Carro *carro_aux = NULL;
+    Carro *carro_escolha = NULL, *carro_aux = NULL;
+    char ch_escolha[31];
     int escolha;
-    int index = 0;
-    int id_carro = 0;
+    int index = 0 ,id_carro = 0;
 
     if (carro != NULL)
     {
         while (1)
         {
+            cabecalho("SISTEMA DE ALUGUEL", "ESCOLHE CARRO");
             carro_imprime(carro, &id_carro);
 
             printf("\nFoi encontrado %d resultado(s).\n", id_carro);
-            printf("Digite o ID do carro para continuar: ");
-            scanf("%d", &escolha);
-            while (getchar() != '\n');
+            
+            alert_msg();
+            printf("\nDigite o ID do carro para continuar (ou deixe em branco para voltar ao menu): ");
 
-            // carro_aux = carro;
-            if (escolha >= 0 && escolha <= id_carro-1)
+            int i = 0;
+            while ((ch_escolha[i] = getchar()) != '\n') i++;
+            ch_escolha[i] = '\0';
+
+            if (strlen(ch_escolha) > 0)                 /* verifica se está vazio */
             {
-                int i;
-                for (i = 0; i < escolha; i++)
+                if (teste_formato(ch_escolha) != 0)     /* verifica se é um número */
                 {
-                    carro = carro->prox_carro;
+                    escolha = atoi(ch_escolha);
+                    if (escolha >= 0 && escolha <= id_carro-1)
+                    {
+                        carro_escolha = carro;
+                        for (i = 0; i < escolha; i++)
+                        {
+                            carro_escolha = carro_escolha->prox_carro;
+                        }
+                        
+                        if(carro_escolha->disponibilidade == 1)
+                        {
+                            return carro_escolha;
+                        }
+                        else
+                        {
+                            alert(-16); /* Carro indisponível */
+                        }
+                    }
+                    else
+                        alert(1);   /* valor inválido */
+
                 }
-            }
-            if(carro->disponibilidade == 0)
-            {
-                printf("\nCarro indisponivel!\n");
-                delay(500);
+                else
+                    alert(1);   /* valor inválido */
             }
             else
+            {
+                alert(0);   /* voltando para o menu (sem mensagem de erro) */
                 break;
+            }
         }
-
-        return carro;
     }
     else
-    {
-        printf("\nNao ha carros cadastrados no sistema\n");
-        return NULL;
-    }
+        alert(-15);          /* lista está vazia */
+
+    return NULL;
 }
 
 void carro_disponivel(Carro *carro)
@@ -269,56 +295,6 @@ Carro *carro_ordena(Carro *carro, char *modelo)
 	
 	return ref; /* retorna o endereço de referência para o novo cadastro */
 }
-
-// int carro_importa(Carro **carro, FILE* fl, int count, int max)
-// {   
-//     int count_import = 0;
-//     // move o cursor do arquivo para o fim
-//     // e verifica se o arquivo está vazio:
-//     fseek(fl, 0, SEEK_END);
-//     if (ftell(fl) != 0) {   
-//         // retorna o cursor ao início do arquivo:
-//         fseek(fl, 0, SEEK_SET);
-//         int i, id;
-//         char nome[31], cargo[101];
-//         long long doc;
-//         int repetidos = 0;
-//         // verifica a quantidade de linhas de dados:
-//         fscanf(fl, "%d\n", &count_import);
-//         // pula a linha do cabeçalho:
-//         char linha[100];
-//         fgets(linha, 100, fl);
-//         // verifica há espaço para receber os dados importados:
-//         if ((count+count_import) < max) {
-//             for (i = 0; i < count_import; i++) {
-//                 fscanf(fl, "%d\t%[^\t]\t%[^\t]\t%lld\n", &id, nome, cargo, &doc);
-//                 if (!func_procura(carro, count, doc)) {
-//                     carro[count] = func_cadastra(1, nome, cargo, doc);
-//                     count++;
-//                 } else {
-//                     repetidos++;
-//                 }
-//             }
-//             if (repetidos != count_import) {
-//                 if (repetidos != 0) {
-//                     printf("\nFoi encontrado %d documentos ja registrados!", repetidos);
-//                     printf("\n%d cadastros foram importados!\n", (count_import - repetidos));
-//                 } else {
-//                     printf(TXT_green"\nTodos os dados foram importados!\n"TXT_reset);
-//                 }
-//                 func_ordena(carro, count);
-//             } else {
-//                 printf(TXT_yellow"\nTodos os dados importados ja estao cadastrados\n"TXT_reset);
-//             }
-//         } else {
-//             printf(TXT_red"\nA quantidade importada excede o limite de cadastro!\n"TXT_reset);
-//         }
-//     } else {
-//         printf(TXT_yellow"\nO arquivo selecionado esta vazio!\n"TXT_reset);
-//     }
-//     // fclose(fl);
-//     return count;
-// }
 
 Carro *carro_leia(Carro *carro)
 {
@@ -409,7 +385,6 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
         }
     }
 }
-
 
 void carro_edita(Carro *carro, Carro *carro_consultado)
 {

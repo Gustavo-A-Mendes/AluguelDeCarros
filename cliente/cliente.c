@@ -157,6 +157,11 @@ void cliente_libera(Cliente *cli)
     }
 }
 
+char *cliente_nome(Cliente *cli)
+{
+    return cli->nome;
+}
+
 char *cliente_doc(Cliente *cli)
 {
     return cli->documento;
@@ -164,34 +169,87 @@ char *cliente_doc(Cliente *cli)
 
 void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
 {
-    Carro *carro_aluga = carro_lista_disponivel(carro);
-    printf("%s\n", carro_aluga->modelo);
-    char *data;
-    int duracao;
     
-    printf("Qual a Data do aluguel [dd/mm/aaaa]?\n");
-    data = input_data();
-
-    if (data != NULL)
+    // printf("%s\n", carro_aluga->modelo);
+    char *data = NULL, ch_duracao[100];
+    int i, op, duracao;
+    
+    while (1)
     {
-        // data_hoje = num_para_data(hoje);
-        if (compara_data(data_hoje, data) >= 0)     /* data do aluguel não pode ser antes da data atual */
+        cabecalho("SISTEMA DE ALUGUEL", "CRIANDO ALUGUEL");
+
+        printf("==========================================================================================\n");
+        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
+        printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
+        printf("==========================================================================================\n");
+
+        alert_msg();
+        printf("\nQual a Data do aluguel [dd/mm/aaaa]? ");
+        data = input_data(data);
+
+        if (strlen(data) > 0)
         {
-            printf("Qual a duracao do aluguel?\n");
-            scanf("%d", &duracao);
-            while (getchar() != '\n');
-
-            cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro_aluga, data, duracao, 1);
-            cli->status = 1;
-            cliente_atualiza_historico(1, cli);
-            alert(-11); /* aluguel criado */
+            if (data != NULL)
+            {
+                // data_hoje = num_para_data(hoje);
+                if (compara_data(data_hoje, data) >= 0)     /* data do aluguel não pode ser antes da data atual */
+                {
+                    printf("Qual a duracao do aluguel? ");
+                    i = 0;
+                    while ((ch_duracao[i] = getchar()) != '\n') i++;
+                    ch_duracao[i] = '\0';
+                    if (strlen(ch_duracao) > 0)
+                    {
+                        if (teste_formato(ch_duracao) > 0)
+                        {
+                            duracao = atoi(ch_duracao);
+                            
+                            if (cliente_resumo_aluguel(cli, carro, data, duracao) == 1)
+                            {
+                                cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro, data, duracao, 1);
+                                cli->status = 1;
+                                cliente_atualiza_historico(1, cli);
+                                alert(-11); /* Aluguel criado */
+                                return;
+                            }
+                            else
+                                alert(-12); /* Aluguel cancelado */
+                                return;
+                        }
+                    }    
+                }
+                else
+                    alert(-9);  /* Data inválida */
+            }
         }
-        else
-            alert(-9);  /* Data inválida */
+        alert(2);     /* Aluguel cancelado */
     }
-    else
+}
+
+int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
+{
+    int op;
+
+    while (1)
     {
-        alert(2);   /* formato inválido */
+        cabecalho("SISTEMA DE ALUGUEL", "CRIANDO ALUGUEL");
+                                
+        printf("==========================================================================================\n");
+        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
+        printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
+        printf(" -> PRAZO:\tDE %-15s ATE %-15s\n", data, prazo(data, duracao));
+        printf("==========================================================================================\n");
+        
+        alert_msg();
+        printf("\nOs dados do aluguel estao corretos [S/N]?\n");
+        op = teste_input();
+
+        if (op == 'S') 
+            return 1;
+        else if (op == 'N')
+            return 0;
+        else
+            alert(1);   /* opção inválida */
     }
 }
 
@@ -237,7 +295,7 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
                 }
             }
         }
-        else                /* procura pelo CPF do cliente */
+        else if (tipo > 0) /* procura pelo CPF do cliente */
         {
             for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
             {
@@ -447,7 +505,6 @@ Cliente *cliente_lista(Cliente *cli)
         while (1)
         {
             id_cliente = 0;
-            system(clear());
 
             // ==================================================
             // exibe cabeçalho:
@@ -561,7 +618,7 @@ void cliente_edita(Cliente *cli, Cliente *editado)
             doc[i] = '\0';
             if (strlen(doc) > 0)
             {
-                if (teste_formato(doc)) /* verifica se o CPF é válido */
+                if (teste_formato(doc) > 0) /* verifica se o CPF é válido */
                 {
                     if (strlen(doc) == 11) 
                     {
@@ -596,7 +653,7 @@ void cliente_edita(Cliente *cli, Cliente *editado)
             tel[i] = '\0';
             if (strlen(tel) > 0)
             {
-                if (teste_formato(tel))     /* verifica se o telefone é válido */
+                if (teste_formato(tel) > 0)     /* verifica se o telefone é válido */
                 {
                     if (strlen(tel) != 11)
                     {
@@ -679,7 +736,7 @@ void cliente_cria_historico(Cliente *cli, char* doc)
     fprintf(hist, "TELEFONE:\t%s\n", cli->telefone);
     fprintf(hist, "STATUS:\t%d\n", cli->status);
 
-    fprintf(hist,"%%\n");     /* Indicador de parada, para busca do histórico */
+    fprintf(hist,"%%");     /* Indicador de parada, para busca do histórico */
     
     // fprintf(hist, "===== HISTORICO DE ALUGUEL =====\n");
 

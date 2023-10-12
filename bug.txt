@@ -1,2 +1,5 @@
+PADRONIZAR MENUS
+    ajeitar a formatação da impressão do aluguel (menu cliente > listar > "consultando cliente" > exibir histórico)
 
-ajeitar a formatação da impressão do aluguel (menu cliente > listar > "consultando cliente" > exibir histórico)
+testar cliente com vários alugueis
+

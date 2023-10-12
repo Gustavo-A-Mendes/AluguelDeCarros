@@ -14,22 +14,22 @@ char *clear(void);
 /* Função cabecalho
     Adiciona o cabeçalho do menu atual
 */
-void cabecalho(char *titulo, char *data_hoje);
+void cabecalho(char *pagina, char *titulo);
 
 /* Função menu_principal 
     Exibe o menu principal
 */
-int menu_principal(Cliente *cli, char *data_hoje);
+int menu_principal(Cliente *cli);
 
 /* Função menu_cliente
     Exibe o menu cliente
 */
-Cliente *menu_cliente(Cliente *cli, Carro *carro, char *data_hoje);
+Cliente *menu_cliente(Cliente *cli, Carro *carro);
 
 /* Função menu_carro
     Exibe o menu carro
 */
-Carro *menu_carro(Cliente *cli, Carro *carro, char *data_hoje);
+Carro *menu_carro(Cliente *cli, Carro *carro);
 
 /* Função data_para_num
     Converte uma string de data em seu correspondente numérico
@@ -89,13 +89,13 @@ int teste_input(void);
 /* Função input_data
     Solicita o dia, mês e ano e retorna uma data
 */
-char *input_data(void);
+char *input_data(char *data);
 
 /* Função passa_tempo
     Muda a data atual definida pelo programa, 
     para simular a passagem de tempo
 */
-char *passa_tempo(char *data_antiga);
+char *passa_tempo(char *data);
 
 /* Função string_upper
     Converte os caracteres de uma string para 
@@ -127,4 +127,5 @@ void registra(char *data, Cliente *cli);
 /* Função registro_leia
     lê o registro do sistema, e recupera os históricos de carros e clientes
 */
-int registro_leia(Cliente **cli, Carro **carro, char **data_sis);
+// void registro_leia(Cliente **cli, Carro **carro, char *data_sis);
+void registro_leia(Cliente **cli, Carro **carro);

@@ -24,6 +24,11 @@ Carro *carro_busca(Carro *carro, char *modelo, int tipo);
 */
 void carro_libera(Carro *carro);
 
+/* Função carro_modelo
+
+*/
+char *carro_modelo(Carro *carro);
+
 /* Função carro_lista
 
 */
