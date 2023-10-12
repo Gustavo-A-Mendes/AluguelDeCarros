@@ -39,11 +39,6 @@ Carro *carro_lista(Carro *carro);
 */
 // Carro *carro_aluga(Carro *carro, Cliente *cliente);
 
-/* Função carro_lista
-
-*/
-Carro *carro_lista_disponivel(Carro *carro);
-
 /* Função carro_busca
 
 */

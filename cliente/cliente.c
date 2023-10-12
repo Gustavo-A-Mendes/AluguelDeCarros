@@ -186,10 +186,10 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
         alert_msg();
         printf("\nQual a Data do aluguel [dd/mm/aaaa]? ");
         data = input_data(data);
-
-        if (strlen(data) > 0)
-        {
-            if (data != NULL)
+        
+        if (data != NULL)
+        {   
+            if (strlen(data) > 0)
             {
                 // data_hoje = num_para_data(hoje);
                 if (compara_data(data_hoje, data) >= 0)     /* data do aluguel não pode ser antes da data atual */
@@ -219,10 +219,9 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
                     }    
                 }
                 else
-                    alert(-9);  /* Data inválida */
+                    alert(8);  /* Data anterior ao dia atual */
             }
         }
-        alert(2);     /* Aluguel cancelado */
     }
 }
 
@@ -237,7 +236,7 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
         printf("==========================================================================================\n");
         printf(" -> CLIENTE:\t%-30s\n", cli->nome);
         printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
-        printf(" -> PRAZO:\t%-15s - %-15s\n", data, prazo(data, duracao));
+        printf(" -> PRAZO:\t%-10s - %-10s\n", data, prazo(data, duracao-1));
         printf("==========================================================================================\n");
         
         alert_msg();
@@ -402,7 +401,6 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
     return NULL;
 }
 
-/* FALTA TERMINAR. ADICIONAR FERRAMENTAS DE EDIÇÃO */
 int cliente_consulta(Cliente *cli, Cliente *consultado)
 {
     int op_cons, vendo_historico = 0;
@@ -470,7 +468,7 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                         printf("==========================================================================================\n");
                         printf(" -> CLIENTE:\t%-30s\n", cli->nome);
                         printf("==========================================================================================\n");
-                        printf("%-10s\t%-15s\t%-10s\t%-10s\t%-20s\n", "STATUS", "MODELO", "PLACA", "PRECO", "DATA ALUGUEL");
+                        printf("%-10s\t%-15s\t%-10s\t%-10s\t%-25s\n", "STATUS", "MODELO", "PLACA", "PRECO", "DATA ALUGUEL");
 
                         aluguel_imprime_historico(aluguel_lista, &vendo_historico);
                     }
@@ -577,10 +575,11 @@ void cliente_edita(Cliente *cli, Cliente *editado)
 
     while (op_edit < 3)
     {
-        system(clear());
+        // ==================================================
+        // exibe cabeçalho:
+        cabecalho("CONSULTA CLIENTE\t", "EDITANDO DADOS\t");
 
-        printf("Deixe em branco para manter o dado salvo:\n");
-        printf("==================================================\n");
+        printf(TXT_yellow"\nDeixe em branco para manter o dado salvo:\n\n"TXT_reset);
 
         switch (op_edit)
         {

@@ -431,14 +431,15 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
 
 long long data_para_num(char *data)
 {
-    int dia, mes, ano;
-    int tempo_dia = 0;
+    int dia, mes;
+    long long ano;
+    long long tempo_dia = 0;
 
     // quantidade de dias de cada mês:
     //               J   F   M   A   M   J   J   A   S   O   N   D 
     int meses[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
-    sscanf(data, "%d/%d/%d", &dia, &mes, &ano);     /* separa os valores da data */
+    sscanf(data, "%d/%d/%lld", &dia, &mes, &ano);     /* separa os valores da data */
 
     tempo_dia += (ano-1) * 365;     /* converte ano em dias */
     
@@ -457,7 +458,8 @@ long long data_para_num(char *data)
 
 char *num_para_data(long long data)
 {
-    int ano = 0, mes = 0, dia = 0;
+    long long ano = 0;
+    int mes = 0, dia = 0;
     int dia_mes;
 
     // quantidade de dias de cada mês:
@@ -477,7 +479,7 @@ char *num_para_data(long long data)
     dia = dia_mes;                  /* o resto do cálculo será o dia */
 
     char *data_format = (char*)malloc(11*sizeof(char));
-    sprintf(data_format, "%02d/%02d/%04d", dia+1, mes+1, ano+1);
+    sprintf(data_format, "%02d/%02d/%04lld", dia+1, mes+1, ano+1);
 
     return data_format;
 }
@@ -609,7 +611,8 @@ int teste_input(void) // editar função
 
 char *input_data(char *data)
 {
-    int i, dia, mes, ano;
+    int i, dia, mes;
+    long long ano;
     char str_dia[100], str_mes[100], str_ano[100];
     char data_input[100];
 
@@ -626,13 +629,13 @@ char *input_data(char *data)
         // verifica se os valores são numéricos:
         if (teste_formato(str_dia) == 1 && teste_formato(str_mes) == 1 && teste_formato(str_ano) == 1)
         {
-            if (strlen(str_dia) == 2 && strlen(str_mes) == 2 && strlen(str_ano) == 4)
+            if (strlen(str_dia) == 2 && strlen(str_mes) == 2)
             {
                 // convertendo para inteiro:
                 dia = atoi(str_dia);
                 mes = atoi(str_mes);
-                ano = atoi(str_ano);
-                sprintf(data_input, "%02d/%02d/%04d", dia, mes, ano);
+                ano = atoll(str_ano);
+                sprintf(data_input, "%02d/%02d/%04lld", dia, mes, ano);
 
                 // verifica se a data é válida:
                 if (data_valida(data_input) == 1)
@@ -640,14 +643,16 @@ char *input_data(char *data)
                     strcpy(data, data_input);
                     return data;
                 }
+
             }
+            else
+                alert(-9); /* Data inválida */
         }
+        else
+            alert(2);   /* Formato inválido */
     }
-    else                /* entrada vazia */
-    {
-        free(data);     /* libera espaço reservado para data */
-        return "\0";    
-    }
+    else
+        alert(2);       /* Formato inválido */
     
     /* entrada inválida */
     free(data);         /* libera espaço reservado para data */
@@ -707,7 +712,7 @@ char *passa_tempo(char *data)
                         else
                         {
                             free(data_nova);            /* libera data_nova */
-                            alert(-9);          /*não pode ir pro passado */
+                            alert(8);          /*não pode ir pro passado */
                         }
                     }
                     else
@@ -790,6 +795,7 @@ void alert_msg(void)
     else if (alert_cod == 5) printf(TXT_yellow"\nO CPF deve conter apenas numeros."TXT_reset);
     else if (alert_cod == 6) printf(TXT_yellow"\nTamanho invalido! O telefone deve conter 11 digitos."TXT_reset);
     else if (alert_cod == 7) printf(TXT_yellow"\nO telefone deve conter apenas numeros."TXT_reset);
+    else if (alert_cod == 8) printf(TXT_red"\nNao e possivel selecionar uma data anterior."TXT_reset);
     // alerta de processo:
     else if (alert_cod == -1) printf(TXT_green"\nData atualizada!"TXT_reset);
     else if (alert_cod == -2) printf(TXT_red"\nO cliente possui um aluguel ativo!"TXT_reset);
@@ -799,7 +805,7 @@ void alert_msg(void)
     else if (alert_cod == -6) printf(TXT_red"\nERRO! Cliente nao encontrado."TXT_reset);
     else if (alert_cod == -7) printf(TXT_red"\nArquivo nao encontrado!"TXT_reset);
     else if (alert_cod == -8) printf(TXT_red"\nNao foi possivel concluir o cadastro"TXT_reset);
-    else if (alert_cod == -9) printf(TXT_red"\nNao e possivel selecionar uma data anterior."TXT_reset);
+    else if (alert_cod == -9) printf(TXT_red"\nData Invalida!"TXT_reset);
     else if (alert_cod == -10) printf(TXT_red"\nNao ha alugueis no historico."TXT_reset);
     else if (alert_cod == -11) printf(TXT_green"\nAluguel criado!"TXT_reset);
     else if (alert_cod == -12) printf(TXT_red"\nAluguel cancelado!"TXT_reset);
@@ -807,7 +813,7 @@ void alert_msg(void)
     else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!"TXT_reset);
     else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema."TXT_reset);
     else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!"TXT_reset);
-
+    
     alert(0);    /* reseta marcador */
 }
 
