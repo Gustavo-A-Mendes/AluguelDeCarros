@@ -122,7 +122,7 @@ void delay(double milissegundos);
     armazena um resumo dos dados do sistema,
     para recuperar histórico na re-execução do código
 */
-void registra(char *data, Cliente *cli);
+void registra(/*char *data, */Cliente *cli);
 
 /* Função registro_leia
     lê o registro do sistema, e recupera os históricos de carros e clientes
