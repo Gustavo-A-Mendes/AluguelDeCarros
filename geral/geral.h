@@ -127,5 +127,4 @@ void registra(char *data, Cliente *cli);
 /* Função registro_leia
     lê o registro do sistema, e recupera os históricos de carros e clientes
 */
-// void registro_leia(Cliente **cli, Carro **carro, char *data_sis);
 void registro_leia(Cliente **cli, Carro **carro);

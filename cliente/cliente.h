@@ -19,11 +19,6 @@ Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *te
 */
 Cliente *cliente_exclui(Cliente *cli, char *dado);
 
-/* Função cliente_nome
-    retorna o valor de nome do cliente
-*/
-char *cliente_nome(Cliente *cli);
-
 /* Função cliente_doc
     retorna o valor de documento do cliente
 */
@@ -35,7 +30,7 @@ char *cliente_doc(Cliente *cli);
 void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje);
 
 /* Função cliente_resumo_aluguel
-
+    exibe um resumo dos dados informados para o aluguel
 */
 int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao);
 
@@ -67,7 +62,7 @@ Cliente *cliente_lista(Cliente *cli);
 void cliente_edita(Cliente *cli, Cliente *editado);
 
 /* Função cliente_atualiza_aluguel
-
+    atualiza as informações de aluguel presente no histórico
 */
 Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje);
 
