@@ -1,5 +1,22 @@
 PADRONIZAR MENUS
-    ajeitar a formatação da impressão do aluguel (menu cliente > listar > "consultando cliente" > exibir histórico)
+    ✅ Menu_principal padronizado
+    
+    ✅ camada mais externa de Menu_cliente padronizada
+        ✅ padronizando seção de aluguel
+            ✅ Novo cadastro
+            ✅ Cadastro Existente
+            ✅ Aluguel
+            ✅ Confirmação do Aluguel
+        ❓ padronizando seção de lista
+            ❓consulta
+                ❓visualizar histórico
+        ❓ padronizando seção de busca
+        ❓ padronizando seção de remoção
 
-testar cliente com vários alugueis
+    ❓ camada mais externa de Menu_carro
+        ❓ seção de adição
+        ❓ seção de lista
+        ❓ seção de consulta
+
+❓ testar cliente com vários alugueis
 
