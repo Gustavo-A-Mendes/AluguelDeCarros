@@ -14,11 +14,6 @@ typedef struct carro Carro;
 */
 Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco);
 
-/* Função carro_busca
-
-*/
-Carro *carro_busca(Carro *carro, char *modelo, int tipo);
-
 /* Função carro_libera
 
 */
@@ -28,6 +23,11 @@ void carro_libera(Carro *carro);
 
 */
 char *carro_modelo(Carro *carro);
+
+/* Função carro_disponibilidade
+
+*/
+int carro_disponibilidade(Carro *carro);
 
 /* Função carro_lista
 
@@ -44,10 +44,10 @@ Carro *carro_lista(Carro *carro);
 */
 Carro *carro_lista_disponivel(Carro *carro);
 
-/* Função carro_disponivel
+/* Função carro_busca
 
 */
-void carro_disponivel(Carro *carro);
+Carro *carro_busca(Carro *carro, char *modelo, int tipo);
 
 /* Função carro_alugado
 
@@ -64,10 +64,16 @@ Carro *carro_ordena(Carro *carro, char *modelo);
 */
 Carro *carro_leia(Carro *carro);
 
+
 /* Função carro_imprime
 
 */
-void carro_imprime(Carro *carro, int *qtd_carros);
+void carro_imprime(Carro *carro);
+
+/* Função carro_imprime_lista
+
+*/
+void carro_imprime_lista(Carro *carro, int *qtd_carros);
 
 /* Função carro_consulta
 

@@ -95,8 +95,8 @@ Cliente *cliente_exclui(Cliente *cli, char *dado)
             
     while (1)
     {
-        system(clear());
-
+        cabecalho("EXCLUINDO CLIENTE\t", "\t\t");
+        
         alert_msg();
         printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
         op = teste_input();
@@ -176,7 +176,7 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
     
     while (1)
     {
-        cabecalho("SISTEMA DE ALUGUEL", "CRIANDO ALUGUEL");
+        cabecalho("SISTEMA DE ALUGUEL\t", "CRIANDO ALUGUEL\t");
 
         printf("==========================================================================================\n");
         printf(" -> CLIENTE:\t%-30s\n", cli->nome);
@@ -232,12 +232,12 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
 
     while (1)
     {
-        cabecalho("SISTEMA DE ALUGUEL", "CRIANDO ALUGUEL");
+        cabecalho("SISTEMA DE ALUGUEL\t", "CRIANDO ALUGUEL\t");
                                 
         printf("==========================================================================================\n");
         printf(" -> CLIENTE:\t%-30s\n", cli->nome);
         printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
-        printf(" -> PRAZO:\tDE %-15s ATE %-15s\n", data, prazo(data, duracao));
+        printf(" -> PRAZO:\t%-15s - %-15s\n", data, prazo(data, duracao));
         printf("==========================================================================================\n");
         
         alert_msg();
@@ -313,8 +313,6 @@ Cliente *cliente_filtra_busca(Cliente *cli, char *dado_busca)
         // verificado que há resultados, refaz a busca, imprimindo os resultados:
         while (1)
         {
-            system(clear());
-
             // ==================================================
             // exibe cabeçalho:
             printf("==========================================================================================\n");
@@ -413,7 +411,8 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
 
     while (1)
     {
-        system(clear());
+
+        cabecalho("LISTA DE CLIENTES\t","CONSULTA CLIENTE");
 
         mascara(consultado->documento, consultado_doc, "###.###.###-##");
         mascara(consultado->telefone, consultado_tel, "(##)#####-####");
@@ -434,23 +433,18 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
         }
         else
             printf("Nao ha aluguel ativo.\n");
-        
-
-        printf("\n>>>[1] Editar\n");
-        printf(">>>[2] Excluir\n");
-        printf(">>>[3] Visualizar historico\n");
-        printf(">>>[4] Voltar a Lista\n");
-        printf(">>>[5] Voltar ao Menu\n");
-        
-        alert_msg();
+            
         if (vendo_historico == 0) 
         {
+            printf("\n>>>[1] Editar\n");
+            printf(">>>[2] Excluir\n");
+            printf(">>>[3] Visualizar historico\n");
+            printf(">>>[4] Voltar a Lista\n");
+            printf(">>>[5] Voltar ao Menu\n");
+        
+            alert_msg();
             printf("\nEscolha uma opcao: ");
             op_cons = teste_input();
-        }
-        else
-        {
-            printf("\nEscolha uma opcao: 3");
         }
 
         switch (op_cons)
@@ -465,28 +459,39 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
             
             case '3':
                 vendo_historico = 1;
+
                 aluguel_lista = consultado->ultimo_aluguel;
-                if (aluguel_lista != NULL)
+                while (vendo_historico == 1)
                 {
-                    aluguel_imprime_historico(aluguel_lista, &vendo_historico);
-                }
-                else
-                {
-                    vendo_historico = 0;
-                    alert(-10);     /* Não há aluguéis */
+                    if (aluguel_lista != NULL)
+                    {
+                        cabecalho("CONSULTA CLIENTE\t","HISTORICO DE ALUGUEL");
+                        
+                        printf("==========================================================================================\n");
+                        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
+                        printf("==========================================================================================\n");
+                        printf("%-10s\t%-15s\t%-10s\t%-10s\t%-20s\n", "STATUS", "MODELO", "PLACA", "PRECO", "DATA ALUGUEL");
+
+                        aluguel_imprime_historico(aluguel_lista, &vendo_historico);
+                    }
+                    else
+                    {
+                        vendo_historico = 0;
+                        alert(-10);     /* Não há aluguéis */
+                    }
                 }
                 break;
             
             case '4':
-                alert(0);
+                alert(0);       /* volta a lista, sem mensagem */
                 return 1;
 
             case '5':
-                alert(0);
+                alert(0);       /* volta ao menu iniciar, sem mensagem */
                 return 0;
 
             default:
-                alert(1);
+                alert(1);       /* Opção inválida */
                 break;
         }
     }
@@ -497,8 +502,7 @@ Cliente *cliente_lista(Cliente *cli)
     Cliente *cliente_escolha = NULL, *cliente_aux = NULL;
     char cliente_doc[15], cliente_tel[15];
     char ch_escolha[31];
-    int escolha;
-    int i, id_cliente;
+    int i, id_cliente, escolha;
 
     if (cli != NULL)
     {
@@ -508,6 +512,8 @@ Cliente *cliente_lista(Cliente *cli)
 
             // ==================================================
             // exibe cabeçalho:
+            cabecalho("LISTA DE CLIENTES\t", "\t\t");
+
             printf("==========================================================================================\n");
             printf("%-3s\t%-30s\t%-15s\t%-15s\t%-10s\n", "ID", "NOME", "CPF", "TELEFONE", "STATUS");
             printf("==========================================================================================\n");

@@ -92,94 +92,74 @@ char *carro_modelo(Carro *carro)
     return carro->modelo;
 }
 
-void carro_imprime(Carro *carro, int *qtd_carro){
+int carro_disponibilidade(Carro *carro)
+{
+    return carro->disponibilidade;
+}
+
+void carro_imprime(Carro *carro)
+{
+    printf("%-15s\t%-10s\tR$%-10.2f\t", carro->modelo, carro->placa, carro->preco);
+}
+
+void carro_imprime_lista(Carro *carro, int *qtd_carro){
     int id_carro = 0;
     
-    // system(clear());
     // ==================================================
     // exibe cabeçalho:
+    cabecalho("LISTA DE CARROS\t", "\t\t");
     
     printf("==========================================================================================\n");
     printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
     printf("==========================================================================================\n");
+    
     // ==================================================
-    // exibe as informações do cliente:
+    // exibe as informações do carro:
     Carro *carro_aux;
     for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
     {
-        printf("%d\t%-15s\t%-10s\tR$%-10.2f\t%-10s\n", id_carro, carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
+        printf("%d\t", id_carro);
+        carro_imprime(carro_aux);
+        printf("%-10s\n", carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
         id_carro++;
     }
     *qtd_carro = id_carro;
 }
 
-Carro *carro_lista(Carro *carro){
-    char carro_escolha[10];
-    int i, dificil = 1, qtd_carros, escolha;
-    Carro *carro_aux;
+Carro *carro_lista(Carro *carro)
+{
+    Carro *carro_escolha = NULL, *carro_aux = NULL;
+    char ch_escolha[100];
+    int i, id_carro, escolha;
     
     if (carro != NULL)
     {
-        while(1){
-            carro_imprime(carro, &qtd_carros);
-
-            printf("\nFoi encontrado %d resultado(s).\n", qtd_carros);
-            alert_msg();
-                printf("\nDigite o ID do cliente para continuar (ou deixe em branco para voltar ao menu): ");
-
-                int i = 0;
-                while ((carro_escolha[i] = getchar()) != '\n') i++;
-                carro_escolha[i] = '\0';
-                if (strlen(carro_escolha) > 0)                 /* verifica se está vazio */
-                {
-                    if (teste_formato(carro_escolha) != 0)     /* verifica se é um número */
-                    {
-                        escolha = atoi(carro_escolha);
-                        if (escolha >= 0 && escolha <= qtd_carros-1)
-                        {
-                            carro_aux = carro;
-                            for (i = 0; i < escolha; i++)
-                            {
-                                carro_aux = carro_aux->prox_carro;
-                            }
-                            return carro_aux;
-                        }
-                    }
-                    alert(1);   /* valor inválido */
-                }
-                else
-                {
-                    alert(0);   /* voltando para o menu (sem mensagem de erro) */
-                    break;
-                }
-        }
-    }
-    else
-        alert(-5);          /* lista está vazia */
-
-    return NULL;
-}
-
-Carro *carro_lista_disponivel(Carro *carro)
-{
-    Carro *carro_escolha = NULL, *carro_aux = NULL;
-    char ch_escolha[31];
-    int escolha;
-    int index = 0 ,id_carro = 0;
-
-    if (carro != NULL)
-    {
-        while (1)
+        while(1)
         {
-            cabecalho("SISTEMA DE ALUGUEL", "ESCOLHE CARRO");
-            carro_imprime(carro, &id_carro);
-
-            printf("\nFoi encontrado %d resultado(s).\n", id_carro);
+            id_carro = 0;
+    
+            // ==================================================
+            // exibe cabeçalho:            
+            printf("==========================================================================================\n");
+            printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
+            printf("==========================================================================================\n");
             
-            alert_msg();
-            printf("\nDigite o ID do carro para continuar (ou deixe em branco para voltar ao menu): ");
+            // ==================================================
+            // exibe as informações do carro:
+            for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
+            {   
+                printf("%d\t", id_carro);
+                carro_imprime(carro_aux);
+                printf("%-10s\n", carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
+                id_carro++;
+            }
+            
+            printf("\nFoi encontrado %d resultado(s).\n", id_carro);
 
-            int i = 0;
+            alert_msg();
+            printf("\nDigite o ID do cliente para continuar (ou deixe em branco para voltar ao menu): ");
+
+            i = 0;
             while ((ch_escolha[i] = getchar()) != '\n') i++;
             ch_escolha[i] = '\0';
 
@@ -195,22 +175,77 @@ Carro *carro_lista_disponivel(Carro *carro)
                         {
                             carro_escolha = carro_escolha->prox_carro;
                         }
-                        
-                        if(carro_escolha->disponibilidade == 1)
-                        {
-                            return carro_escolha;
-                        }
-                        else
-                        {
-                            alert(-16); /* Carro indisponível */
-                        }
+                        return carro_escolha;
                     }
-                    else
-                        alert(1);   /* valor inválido */
-
                 }
-                else
-                    alert(1);   /* valor inválido */
+                alert(1);   /* valor inválido */
+            }
+            else
+            {
+                alert(0);   /* voltando para o menu (sem mensagem de erro) */
+                break;
+            }
+        }
+    }
+    else
+        alert(-5);          /* lista está vazia */
+
+    return NULL;
+}
+
+Carro *carro_lista_disponivel(Carro *carro)
+{
+    Carro *carro_escolha = NULL, *carro_aux = NULL;
+    char ch_escolha[100];
+    int i, id_carro, escolha;
+
+    if (carro != NULL)
+    {
+        while (1)
+        {
+            id_carro = 0;
+
+            // ==================================================
+            // exibe cabeçalho:
+            printf("==========================================================================================\n");
+            printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
+            printf("==========================================================================================\n");
+            
+            // ==================================================
+            // exibe as informações do carro disponíveis:
+            for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
+            {   
+                printf("%d\t", id_carro);
+                carro_imprime(carro_aux);
+                printf("%-10s\n", carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
+                id_carro++;
+            }
+
+            printf("\nFoi encontrado %d resultado(s).\n", id_carro);
+            
+            alert_msg();
+            printf("\nDigite o ID do carro para continuar (ou deixe em branco para voltar ao menu): ");
+
+            i = 0;
+            while ((ch_escolha[i] = getchar()) != '\n') i++;
+            ch_escolha[i] = '\0';
+
+            if (strlen(ch_escolha) > 0)                 /* verifica se está vazio */
+            {
+                if (teste_formato(ch_escolha) != 0)     /* verifica se é um número */
+                {
+                    escolha = atoi(ch_escolha);
+                    if (escolha >= 0 && escolha <= id_carro-1)
+                    {
+                        carro_escolha = carro;
+                        for (i = 0; i < escolha; i++)
+                        {
+                            carro_escolha = carro_escolha->prox_carro;
+                        }
+                        return carro_escolha;
+                    }
+                }
+                alert(1);   /* valor inválido */
             }
             else
             {
@@ -225,19 +260,17 @@ Carro *carro_lista_disponivel(Carro *carro)
     return NULL;
 }
 
-void carro_disponivel(Carro *carro)
-{
-    Carro *auxiliar;
-    printf("CARROS DISPONIVEIS:\n");
-    printf("%s\t%s\t%s", "MODELO", "PLACA", "PRECO");
-
-    for(auxiliar = carro; auxiliar != NULL; auxiliar=auxiliar->prox_carro){
-
-        if(auxiliar->disponibilidade != 0){
-            printf("%s\t%s\tR$%.2f\n", auxiliar->modelo, auxiliar->placa, auxiliar->preco);
-        }   
-    }
-}
+// void carro_disponivel(Carro *carro)
+// {
+//     Carro *auxiliar;
+//     printf("CARROS DISPONIVEIS:\n");
+//     printf("%s\t%s\t%s", "MODELO", "PLACA", "PRECO");
+//     for(auxiliar = carro; auxiliar != NULL; auxiliar=auxiliar->prox_carro){
+//         if(auxiliar->disponibilidade != 0){
+//             printf("%s\t%s\tR$%.2f\n", auxiliar->modelo, auxiliar->placa, auxiliar->preco);
+//         }   
+//     }
+// }
 
 void carro_alugado(Carro *carro)
 {

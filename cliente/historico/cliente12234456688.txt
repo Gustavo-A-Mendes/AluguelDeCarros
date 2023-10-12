@@ -4,3 +4,20 @@ CPF:	12234456688
 TELEFONE:	87914145582
 STATUS:	0
 %
+===== HISTORICO DE ALUGUEL =====
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	03/02/2023
+-> ATE:	05/02/2023
+MODELO:	CORSA SEDAN
+PLACA:	GHI7H89
+PRECO:	82.39
+==================================================
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	02/01/2023
+-> ATE:	06/01/2023
+MODELO:	AIRCROSS
+PLACA:	STU6V78
+PRECO:	92.00
+==================================================
