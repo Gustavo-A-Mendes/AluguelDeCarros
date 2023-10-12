@@ -30,8 +30,6 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
 
     novo->placa = (char*)malloc(41*sizeof(char)); 
     novo->modelo = (char*)malloc(15*sizeof(char)); 
-    novo->disponibilidade = 1;
-    novo->preco = preco;
     // ==================================================
     // encadea o endereço dos clientes:
     
@@ -41,6 +39,8 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
     novo->modelo = realoca_string(novo->modelo);
     strcpy(novo->placa, placa);
     novo->placa = realoca_string(novo->placa);
+    novo->disponibilidade = 1;
+    novo->preco = preco;
 
     // ==================================================
     // encadea o endereço dos clientes:
@@ -102,29 +102,29 @@ void carro_imprime(Carro *carro)
     printf("%-15s\t%-10s\tR$%-10.2f\t", carro->modelo, carro->placa, carro->preco);
 }
 
-void carro_imprime_lista(Carro *carro, int *qtd_carro){
-    int id_carro = 0;
-    
-    // ==================================================
-    // exibe cabeçalho:
-    cabecalho("LISTA DE CARROS\t", "\t\t");
-    
-    printf("==========================================================================================\n");
-    printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
-    printf("==========================================================================================\n");
-    
-    // ==================================================
-    // exibe as informações do carro:
-    Carro *carro_aux;
-    for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
-    {
-        printf("%d\t", id_carro);
-        carro_imprime(carro_aux);
-        printf("%-10s\n", carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
-        id_carro++;
-    }
-    *qtd_carro = id_carro;
-}
+// void carro_imprime_lista(Carro *carro, int *qtd_carro){
+//     int id_carro = 0;
+// 
+//     // ==================================================
+//     // exibe cabeçalho:
+//     cabecalho("LISTA DE CARROS\t", "\t\t");
+//  
+//     printf("==========================================================================================\n");
+//     printf("%-3s\t%-15s\t%-10s\t%-10s\t%-10s\n", "ID", "MODELO", "PLACA", "PRECO", "STATUS");
+//     printf("==========================================================================================\n");
+//    
+//     // ==================================================
+//     // exibe as informações do carro:
+//     Carro *carro_aux;
+//     for (carro_aux = carro ; carro_aux != NULL ; carro_aux=carro_aux->prox_carro)
+//     {
+//         printf("%d\t", id_carro);
+//         carro_imprime(carro_aux);
+//         printf("%-10s\n", carro_aux->disponibilidade ? "Disponivel" : "Indisponivel");
+//         id_carro++;
+//     }
+//     *qtd_carro = id_carro;
+// }
 
 Carro *carro_lista(Carro *carro)
 {
@@ -216,11 +216,7 @@ void carro_alugado(Carro *carro)
 Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)
 {
     Carro *carro_aux;
-    
-    // verifica o tipo de dado usado para a busca [nome/CPF]:
-    // int tipo = teste_formato(dado_busca);
 
-    // printf("Tipo: %d\n", tipo);
     if (tipo == 0)      /* procura o carro pelo modelo */
     {
         for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)   
@@ -302,6 +298,72 @@ Carro *carro_leia(Carro *carro)
     return carro;
 }
 
+void carro_edita(Carro *carro, Carro *carro_consultado)
+{
+    int i;
+    char novo_preco[10];
+
+    system(clear());
+
+    printf("Deixe em branco para manter o dado salvo:\n");
+    printf("==================================================\n");
+
+    printf("Digite o novo nome:\n");
+    printf("Antigo: R$%.2f\n", carro_consultado->preco);
+    printf("Novo: ");
+
+    i = 0;
+    while ((novo_preco[i] = getchar()) != '\n') i++;
+    novo_preco[i] = '\0';
+    if (strlen(novo_preco) > 0)
+    {
+        carro_consultado->preco = atof(novo_preco);
+    }
+    carro_atualiza_galeria(carro);
+    alert(-13);
+}
+
+void carro_exclui(Carro *carro, Carro *carro_consultado)
+{
+    int op;
+    Carro *carro_aux;
+
+    while(1)
+    {
+        system(clear());
+
+        alert_msg();
+        printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
+        op = teste_input();
+
+        if (op == 'S')
+        {
+            //for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
+            //{
+             
+                if (carro_consultado == carro)
+                    carro = carro_consultado->prox_carro;
+                else
+                    carro_consultado->ant_carro->prox_carro = carro_consultado->prox_carro;
+                if(carro_consultado->prox_carro != NULL)
+                    carro_consultado->prox_carro->ant_carro = carro_consultado->ant_carro;  
+                
+                carro_atualiza_galeria(carro);
+                free(carro_consultado->modelo);
+                free(carro_consultado->placa);
+                free(carro_consultado);
+                alert(-14);
+
+                break;;
+            //} 
+        }
+        else if (op == 'N')
+            break;
+        else
+            alert(1);
+    }
+}
+
 int carro_consulta(Carro *carro, Carro *carro_consultado)
 {
     int op_cons;
@@ -349,31 +411,6 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
     }
 }
 
-void carro_edita(Carro *carro, Carro *carro_consultado)
-{
-    int i;
-    char novo_preco[10];
-
-    system(clear());
-
-    printf("Deixe em branco para manter o dado salvo:\n");
-    printf("==================================================\n");
-
-    printf("Digite o novo nome:\n");
-    printf("Antigo: R$%.2f\n", carro_consultado->preco);
-    printf("Novo: ");
-
-    i = 0;
-    while ((novo_preco[i] = getchar()) != '\n') i++;
-    novo_preco[i] = '\0';
-    if (strlen(novo_preco) > 0)
-    {
-        carro_consultado->preco = atof(novo_preco);
-    }
-    carro_atualiza_galeria(carro);
-    alert(-13);
-}
-
 void carro_atualiza_galeria(Carro *carro)
 {
     char nome_arquivo[60] = "./carro/galeria.txt";
@@ -393,45 +430,4 @@ void carro_atualiza_galeria(Carro *carro)
     }
 
     fclose(galeria);
-}
-
-void carro_exclui(Carro *carro, Carro *carro_consultado)
-{
-    int op;
-    Carro *carro_aux;
-
-    while(1)
-    {
-        system(clear());
-
-        alert_msg();
-        printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
-        op = teste_input();
-
-        if (op == 'S')
-        {
-            //for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
-            //{
-             
-                if (carro_consultado == carro)
-                    carro = carro_consultado->prox_carro;
-                else
-                    carro_consultado->ant_carro->prox_carro = carro_consultado->prox_carro;
-                if(carro_consultado->prox_carro != NULL)
-                    carro_consultado->prox_carro->ant_carro = carro_consultado->ant_carro;  
-                
-                carro_atualiza_galeria(carro);
-                free(carro_consultado->modelo);
-                free(carro_consultado->placa);
-                free(carro_consultado);
-                alert(-14);
-
-                break;;
-            //} 
-        }
-        else if (op == 'N')
-            break;
-        else
-            alert(1);
-    }
 }

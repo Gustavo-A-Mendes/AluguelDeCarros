@@ -16,18 +16,6 @@ int main(void) {
     
     /* Recuperando dados salvos */
     registro_leia(&clientes, &carros);
-    // printf("Carregando dados dos Carros...\n");
-    // delay(ATRASO);     /* atraso para verificar resposta */
-    // if((carros = carro_leia(carros)) != NULL)
-    //     printf("Dados recuperados com sucesso\n");
-    
-    // delay(ATRASO);     /* atraso para verificar resposta */
-
-    // printf("Carregando dados dos Clientes...\n");
-    // delay(ATRASO);     /* atraso para verificar resposta */
-    // if((clientes = cliente_leia(clientes, carros)) != NULL)
-    //     printf("Dados recuperados com sucesso\n");
-
     delay(ATRASO);     /* atraso para verificar resposta */
 
     // Menu principal:
@@ -42,7 +30,7 @@ int main(void) {
     
     cliente_libera(clientes);
     carro_libera(carros);
-    // carro_libera(carros);
+    
     printf("\ntchau");
 
     return 0;

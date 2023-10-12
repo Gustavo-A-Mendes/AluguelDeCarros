@@ -14,25 +14,51 @@ typedef struct cliente Cliente;
 */
 Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *tel, int status);
 
-/* Função cliente_exclui
-    exclui o cadastro do cliente
+/* Função cliente_libera
+    libera memória alocada para a lista de clientes
 */
-Cliente *cliente_exclui(Cliente *cli, char *dado);
+void cliente_libera(Cliente *cli);
+
+/* Função cliente_nome
+    retonr o nome do cliente
+*/
+char *cliente_nome(Cliente *cli);
 
 /* Função cliente_doc
-    retorna o valor de documento do cliente
+    retorna o CPF do cliente
 */
 char *cliente_doc(Cliente *cli);
 
-/* Função cliente_aluga
-    inicia o processo de alguel de carro
+/* Função cliente_total
+    calcula o total de clientes cadastrados
 */
-void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje);
+int cliente_total(Cliente *cli);
 
 /* Função cliente_resumo_aluguel
     exibe um resumo dos dados informados para o aluguel
 */
 int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao);
+
+/* Função cliente_conflito
+    verifica se há algum conflito de datas entre os aluguéis
+    dos clientes
+*/
+int cliente_conflito(Cliente *cli, char *data, long long duracao);
+
+/* Função cliente_aluga
+    inicia o processo de alguel de carro
+*/
+void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje);
+
+/* Função cliente_imprime
+    exibe as informações básicas do cliente
+*/
+void cliente_imprime(Cliente *cli);
+
+/* Função cliente_lista
+    imprime um lista dos clientes cadastrados
+*/
+Cliente *cliente_lista(Cliente *cli);
 
 /* Função cliente_busca
     retorna o elemento que contenha o dado de busca
@@ -45,36 +71,26 @@ Cliente *cliente_busca(Cliente *cli, char* dado_busca);
 */
 Cliente *cliente_filtra_busca(Cliente *cli, char* dado_busca);
 
-/* Função cliente_consulta
-    verifica os detalhes de registro do cliente (dados pessoais e aluguel)
-*/
-int cliente_consulta(Cliente *cli, Cliente *consultado);
-
-/* Função cliente_lista
-    imprime um lista dos clientes cadastrados
-*/
-Cliente *cliente_lista(Cliente *cli);
-
 /* Função cliente_edita
     abre sessão de edição, para modificar os dados pessoais
     do cliente
 */
 void cliente_edita(Cliente *cli, Cliente *editado);
 
+/* Função cliente_exclui
+    exclui o cadastro do cliente
+*/
+Cliente *cliente_exclui(Cliente *cli, char *dado);
+
+/* Função cliente_consulta
+    verifica os detalhes de registro do cliente (dados pessoais e aluguel)
+*/
+int cliente_consulta(Cliente *cli, Cliente *consultado);
+
 /* Função cliente_atualiza_aluguel
     atualiza as informações de aluguel presente no histórico
 */
 Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje);
-
-/* Função cliente_total
-    calcula o total de clientes cadastrados
-*/
-int cliente_total(Cliente *cli);
-
-/* Função cliente_libera
-    libera memória alocada para a lista de clientes
-*/
-void cliente_libera(Cliente *cli);
 
 /* Função cliente_cria_historico
     cria um arquivo de histórico para o cliente
@@ -95,12 +111,6 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc);
     apaga histórico de um cliente (que foi apagado)
 */
 void cliente_apaga_historico(Cliente *cli);
-
-/* Função cliente_registra
-    armazena um resumo dos dados do cliente,
-    para recuperar histórico na re-execução do código
-*/
-void cliente_registra(Cliente *cli);
 
 /* Função cliente_ordena
     retorna a posição ordenada do novo cliente,

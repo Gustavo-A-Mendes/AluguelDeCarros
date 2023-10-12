@@ -30,7 +30,6 @@ char *clear(void)
     #endif
 }
 
-// void cabecalho(char *titulo, char *data_hoje)
 void cabecalho(char *pagina, char *titulo)
 {
     system(clear());
@@ -58,6 +57,7 @@ int menu_principal(Cliente* cli)
         case '0':
             strcpy(data_hoje, passa_tempo(data_hoje));
             cliente_atualiza_aluguel(cli, data_hoje);
+            registro(cli);
 
             break;
 
@@ -104,9 +104,8 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
         printf(">>> [1] ALUGAR\n"); // submenu: adicionar cliente            
         printf(">>> [2] LISTAR\n"); // submenu: historico do cliente
         printf(">>> [3] BUSCAR\n"); // submenu: editar cliente e historico
-        printf(">>> [4] CONSULTAR QUANTIDADE\n");    
-        printf(">>> [5] REMOVER CLIENTE\n");    
-        printf(">>> [6] VOLTAR\n");    
+        printf(">>> [4] REMOVER CLIENTE\n");    
+        printf(">>> [5] VOLTAR\n");    
         
         alert_msg();
         printf("\nEscolha uma opcao: ");
@@ -119,6 +118,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
             case '0':
                 strcpy(data_hoje, passa_tempo(data_hoje));
                 cliente_atualiza_aluguel(cli, data_hoje);
+                registro(cli);
 
                 break;
 
@@ -241,7 +241,8 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                                 {
                                     if(carro_disponibilidade(carro_aluga) == 1)
                                     {
-                                        cliente_aluga(cliente_aux, carro_aluga, data_hoje);
+                                        (cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
+                                        registro(cli);
                                         break;
                                     }
                                     else
@@ -298,22 +299,18 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                     if (cliente_aux != NULL)
                     {
                         system(clear());
-                        if (cliente_consulta(cli, cliente_aux) == 0) break;
+                        if (cliente_consulta(cli, cliente_aux) == 0)
+                        {
+                            // registro(data_hoje, cli);   /* atualiza o registro */
+                            break;
+                        }
+
                     }
                     else break;
                 }
                 break;
-
-            case '4':
-                printf("\nConsultando Quantitativo...\n");
-                delay(ATRASO);
-
-                total_atual = cliente_total(cli);
-                printf("Ha %d clientes cadastrados.\n", total_atual);
-                delay(3000);       /* atraso para verificar resposta */
-                break;
             
-            case '5':
+            case '4':
                 printf("\nApagando Conta de Cadastro...\n");
                 delay(ATRASO);
 
@@ -330,7 +327,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         cliente_aux = cliente_filtra_busca(cli, dado);
                         if (cliente_aux != NULL)
                             cli = cliente_exclui(cli, cliente_doc(cliente_aux));
-
+                            // registro(data_hoje, cli);   /* atualiza o registro */
                         break;
                     }
                 }
@@ -341,7 +338,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 }
                 break;
 
-            case '6':
+            case '5':
                 printf("\nVoltando ao Menu Inicial...\n");
                 delay(ATRASO);
                 break;
@@ -351,7 +348,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 delay(ATRASO);
                 break;
         }
-    } while (op2 != '6');
+    } while (op2 != '5');
 
     return cli;
 }
@@ -380,8 +377,10 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
 
         switch (op3) {
             case '0':
-                // data_hoje = passa_tempo(data_hoje);
                 strcpy(data_hoje, passa_tempo(data_hoje));
+                cliente_atualiza_aluguel(cli, data_hoje);
+                registro(cli);
+
 
             case '1':
                 printf("\nAdicionando Carro ao Sistema...\n");
@@ -527,7 +526,7 @@ char *prazo(char *data, long long duracao)
     // converte data de início para valor numérico:
     long long data_ini = data_para_num(data);
     // soma a duração do aluguel:
-    long long data_fim = data_ini + duracao;
+    long long data_fim = data_ini + duracao - 1;
 
     // retorna a data final do aluguel:
     return num_para_data(data_fim);
@@ -598,7 +597,7 @@ int teste_formato(char *str)
     return 1;               /* é número positivo */
 }
 
-int teste_input(void) // editar função
+int teste_input(void)
 {
     char teste[100];
     int i = 0;
@@ -675,11 +674,8 @@ char *passa_tempo(char *data)
     
     do
     {
-        system(clear());
+        cabecalho("MUDAR DATA\t\t", "\t\t");
         
-        printf("============================================================\n");
-        printf("  %s\t\t\t\t\t%s\n", "MUDAR DATA", data_hoje);
-        printf("============================================================\n");
         printf(">>> [1] Avancar Dias\n");
         printf(">>> [2] Inserir Data\n");
         printf(">>> [3] Voltar\n");
@@ -691,11 +687,8 @@ char *passa_tempo(char *data)
         switch (op_data)
         {
             case '1':
-                system(clear());
+                cabecalho("MUDAR DATA\t\t", "AVANCAR DIA\t");
 
-                printf("============================================================\n");
-                printf("  %s\t\t%s\t\t%s\n", "MUDAR DATA", "AVANCAR DIA", data_hoje);
-                printf("============================================================\n");
                 printf("Quantos dias quer avancar?\n");
                 
                 i = 0;
@@ -706,7 +699,7 @@ char *passa_tempo(char *data)
                     if (teste_formato(ch_dias) != 0)    /* o valor é numérico */
                     {
                         dias = atoll(ch_dias);
-                        data_nova = prazo(data, dias);
+                        data_nova = prazo(data, dias + 1);
                         if (compara_data(data, data_nova) >= 0)
                         {
                             alert(-1);   /* data atualizada */
@@ -717,6 +710,7 @@ char *passa_tempo(char *data)
                         else
                         {
                             free(data_nova);            /* libera data_nova */
+                            data_nova = NULL;
                             alert(8);          /*não pode ir pro passado */
                         }
                     }
@@ -730,11 +724,8 @@ char *passa_tempo(char *data)
                 break;
             
             case '2':
-                system(clear());
+                cabecalho("MUDAR DATA\t\t", "INSERIR DATA\t");
 
-                printf("============================================================\n");
-                printf("  %s\t\t%s\t\t%s\n", "MUDAR DATA", "INSERIR DATA", data_hoje);
-                printf("============================================================\n");
                 printf("Insira a nova data [dd/mm/aaaa]:\n");
 
                 data_nova = input_data(data_nova);
@@ -745,11 +736,14 @@ char *passa_tempo(char *data)
                         alert(-1);   /* data atualizada */
                         strcpy(data, data_nova);
                         free(data_nova);            /* libera data_nova */
+                        data_nova = NULL;
+                        
                         return data;
                     }
                     else
                     {
                         free(data_nova);            /* libera data_nova */
+                        data_nova = NULL;
                         alert(-9);          /*não pode ir pro passado */
                     }
                 }
@@ -832,7 +826,7 @@ void delay(double milissegundos)
     while (milissegundos > clock() - tempo_inicial);
 }
 
-void registra(char *data, Cliente *cli)
+void registro(/*char *data, */Cliente *cli)
 {
     FILE *fl = fopen("registro.txt", "wt");
     // verifica se o arquivo foi aberto corretamente:
@@ -844,7 +838,7 @@ void registra(char *data, Cliente *cli)
 
     // ==================================================
     // armazena o dia final da execução:
-    fprintf(fl, "%s\n", data);
+    fprintf(fl, "%s\n", data_hoje);
 
     // escreve cabeçalho:
     fprintf(fl, "%s\t%s\t%s\n", "NOME", "CPF", "STATUS");
@@ -859,7 +853,6 @@ void registra(char *data, Cliente *cli)
     fclose(fl);
 }
 
-// void registro_leia(Cliente **cli, Carro **carro, char *data_sis)
 void registro_leia(Cliente **cli, Carro **carro)
 {
     int i, id;

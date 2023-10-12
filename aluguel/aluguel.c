@@ -30,6 +30,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, i
     // ==================================================
     // insere os dados do cliente:
     strcpy(novo_aluguel->data_aluguel, data);
+    novo_aluguel->data_aluguel = realoca_string(novo_aluguel->data_aluguel);
     novo_aluguel->duracao = duracao;
     novo_aluguel->status_aluguel = status;
     novo_aluguel->carro = carro;
@@ -76,9 +77,9 @@ void aluguel_libera(Aluguel *aluguel)
 void aluguel_imprime(Aluguel *aluguel)
 {   
     
-    printf("\n%-10s\t", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO");
+    printf("%-10s\t", aluguel->status_aluguel ? "ATIVO" : "FINALIZADO");
     carro_imprime(aluguel->carro);
-    printf("%-10s -> %-10s", aluguel->data_aluguel, aluguel_data_fim(aluguel));
+    printf("%-10s -> %-10s\n", aluguel->data_aluguel, aluguel_data_fim(aluguel));
 }
 
 void aluguel_imprime_historico(Aluguel *aluguel, int *historico)
@@ -115,10 +116,10 @@ void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl)
     Aluguel *aluguel_aux;
     for (aluguel_aux = aluguel; aluguel_aux != NULL; aluguel_aux=aluguel_aux->prox_aluguel)
     {
-        fprintf(fl, "STATUS:\t%d\n", aluguel_aux->status_aluguel);
+        fprintf(fl, "\nSTATUS:\t%d\n", aluguel_aux->status_aluguel);
         fprintf(fl, "PRAZO ALUGUEL:\n");
         fprintf(fl, "-> DE:\t%s\n", aluguel_aux->data_aluguel);
-        fprintf(fl, "-> ATE:\t%s\n", prazo(aluguel_aux->data_aluguel, aluguel_aux->duracao-1));
+        fprintf(fl, "-> ATE:\t%s\n", prazo(aluguel_aux->data_aluguel, aluguel_aux->duracao));
         fprintf(fl, "MODELO:\t%s\n", aluguel_aux->carro->modelo);
         fprintf(fl, "PLACA:\t%s\n", aluguel_aux->carro->placa);
         fprintf(fl, "PRECO:\t%.2f\n", aluguel_aux->carro->preco);
@@ -143,11 +144,22 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 	return ref; /* retorna o endereço de referência para o novo cadastro */
 }
 
+char *aluguel_data_inicio(Aluguel *aluguel)
+{
+    return aluguel->data_aluguel;
+}
+
 char *aluguel_data_fim(Aluguel *aluguel)
 {
     int data_inicio = data_para_num(aluguel->data_aluguel);
     char *data_fim = num_para_data(data_inicio + aluguel->duracao - 1);
     return data_fim;
+}
+
+void aluguel_inicia(Aluguel *aluguel)
+{
+    aluguel->status_aluguel = 1;
+    carro_alugado(aluguel->carro);
 }
 
 void aluguel_finaliza(Aluguel *aluguel)
