@@ -43,8 +43,13 @@ void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl);
 */
 Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio);
 
+/* Função aluguel_data_inicio
+    retorna o primeiro dia do ultimo aluguel listado
+*/
+char *aluguel_data_inicio(Aluguel *aluguel);
+
 /* Função aluguel_data_fim
-    retorna o ultimo dia do aluguel ativo
+    retorna o ultimo dia do ultimo aluguel listado
 */
 char *aluguel_data_fim(Aluguel *aluguel);
 

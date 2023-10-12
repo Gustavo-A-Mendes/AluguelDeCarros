@@ -4,3 +4,12 @@ CPF:	07212343792
 TELEFONE:	87912124437
 STATUS:	0
 %
+===== HISTORICO DE ALUGUEL =====
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	02/01/2023
+-> ATE:	21/01/2023
+MODELO:	UNO
+PLACA:	XYZ5E67
+PRECO:	78.00
+==================================================

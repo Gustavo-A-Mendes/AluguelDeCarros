@@ -4,3 +4,20 @@ CPF:	12234456688
 TELEFONE:	87914145582
 STATUS:	0
 %
+===== HISTORICO DE ALUGUEL =====
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	12/02/2023
+-> ATE:	16/02/2023
+MODELO:	CELTA
+PLACA:	LMN9O12
+PRECO:	80.25
+==================================================
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	01/01/2023
+-> ATE:	03/01/2023
+MODELO:	AIRCROSS
+PLACA:	STU6V78
+PRECO:	92.00
+==================================================

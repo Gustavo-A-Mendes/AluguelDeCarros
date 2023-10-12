@@ -4,3 +4,20 @@ CPF:	01432344192
 TELEFONE:	88999800589
 STATUS:	0
 %
+===== HISTORICO DE ALUGUEL =====
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	25/01/2023
+-> ATE:	26/01/2023
+MODELO:	CORSA
+PLACA:	DEF3G56
+PRECO:	75.35
+==================================================
+STATUS:	0
+PRAZO ALUGUEL:
+-> DE:	04/01/2023
+-> ATE:	10/01/2023
+MODELO:	CORSA SEDAN
+PLACA:	GHI7H89
+PRECO:	82.39
+==================================================

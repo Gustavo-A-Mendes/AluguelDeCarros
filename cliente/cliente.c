@@ -78,7 +78,7 @@ Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *te
     if (tag == 1)
     {
         cliente_cria_historico(novo_cliente, doc);
-        registra(cli);
+        registro(cli);
     }
     // printf("\nCadastro feito com sucesso!\n");
     // delay(1000);        /* atraso para verificar resposta */
@@ -126,19 +126,71 @@ int cliente_total(Cliente *cli)
     return total_cliente;
 }
 
-void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
+int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
 {
-    
+    int op;
+
+    while (1)
+    {
+        cabecalho("SISTEMA DE ALUGUEL\t", "CRIANDO ALUGUEL\t");
+                                
+        printf("==========================================================================================\n");
+        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
+        printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
+        printf(" -> PRAZO:\t%-10s - %-10s\n", data, prazo(data, duracao));
+        printf("==========================================================================================\n");
+        
+        alert_msg();
+        printf("\nOs dados do aluguel estao corretos [S/N]?\n");
+        op = teste_input();
+
+        if (op == 'S') 
+            return 1;
+        else if (op == 'N')
+            return 0;
+        else
+            alert(1);   /* opção inválida */
+    }
+}
+
+int cliente_conflito(Cliente *cli, char *data, long long duracao)
+{
+    Cliente *cliente_aux;
+    char *data_inicio, *data_fim, *prazo_data;
+
+    for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
+    {
+        data_inicio = aluguel_data_inicio(cliente_aux->ultimo_aluguel);
+        data_fim = aluguel_data_fim(cliente_aux->ultimo_aluguel);
+
+        // o começo do aluguel analisado não pode iniciar durante o aluguel de outro cliente:
+        if (compara_data(data, data_inicio) < 0 && compara_data(data, data_fim) >= 0)
+            return 0;
+
+        // o fim do aluguel analisado precisa ser antes que o começo de um aluguel de outro cliente:
+        prazo_data = prazo(data, duracao);
+        if (compara_data(prazo_data, data_inicio) < 0 && compara_data(prazo_data, data_fim) >= 0)
+            return 0;
+
+        return 1;
+    }
+}
+
+void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
+{
+    Cliente *cliente_aux = NULL;
     // printf("%s\n", carro_aluga->modelo);
     char *data = NULL, ch_duracao[100];
     int i, op, duracao;
     
+    cliente_aux = cliente_busca(cli, doc);
+
     while (1)
     {
         cabecalho("SISTEMA DE ALUGUEL\t", "CRIANDO ALUGUEL\t");
 
         printf("==========================================================================================\n");
-        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
+        printf(" -> CLIENTE:\t%-30s\n", cliente_aux->nome);
         printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
         printf("==========================================================================================\n");
 
@@ -163,17 +215,20 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
                         {
                             duracao = atoi(ch_duracao);
                             
-                            if (cliente_resumo_aluguel(cli, carro, data, duracao) == 1)
+                            if (cliente_conflito(cli, data, duracao) == 1)
                             {
-                                cli->ultimo_aluguel = aluguel_cria(cli->ultimo_aluguel, carro, data, duracao, 1);
-                                cli->status = 1;
-                                cliente_atualiza_historico(1, cli);
-                                alert(-11); /* Aluguel criado */
+                                if (cliente_resumo_aluguel(cliente_aux, carro, data, duracao) == 1)
+                                {
+                                    cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro, data, duracao, 0);
+                                    cliente_atualiza_aluguel(cli, data_hoje);
+                                    cliente_atualiza_historico(1, cli);
+                                    alert(-11); /* Aluguel criado */
+                                }
+                                else
+                                    alert(-12); /* Aluguel cancelado */
+
                                 return;
                             }
-                            else
-                                alert(-12); /* Aluguel cancelado */
-                                return;
                         }
                     }    
                 }
@@ -181,33 +236,6 @@ void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje)
                     alert(8);  /* Data anterior ao dia atual */
             }
         }
-    }
-}
-
-int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
-{
-    int op;
-
-    while (1)
-    {
-        cabecalho("SISTEMA DE ALUGUEL\t", "CRIANDO ALUGUEL\t");
-                                
-        printf("==========================================================================================\n");
-        printf(" -> CLIENTE:\t%-30s\n", cli->nome);
-        printf(" -> CARRO:\t%-15s\n", carro_modelo(carro));
-        printf(" -> PRAZO:\t%-10s - %-10s\n", data, prazo(data, duracao-1));
-        printf("==========================================================================================\n");
-        
-        alert_msg();
-        printf("\nOs dados do aluguel estao corretos [S/N]?\n");
-        op = teste_input();
-
-        if (op == 'S') 
-            return 1;
-        else if (op == 'N')
-            return 0;
-        else
-            alert(1);   /* opção inválida */
     }
 }
 
@@ -545,7 +573,7 @@ void cliente_edita(Cliente *cli, Cliente *editado)
     }
 
     cliente_atualiza_historico(0, editado);
-    registra(cli);
+    registro(cli);
     alert(-13);
 }
 
@@ -589,7 +617,7 @@ Cliente *cliente_exclui(Cliente *cli, char *dado)
             aluguel_libera(cliente_excluido->ultimo_aluguel);
             free(cliente_excluido);
             
-            registra(cli);
+            registro(cli);
             alert(-4);      /* cadastro excluido */
             break;
         } 
@@ -701,14 +729,23 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
 {
     Cliente *cliente_aux;
     Aluguel *aluguel_aux;
-    char *data_final;
+    char *data_inicio, *data_final;
 
     for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
     {
         aluguel_aux = cliente_aux->ultimo_aluguel;
         if (aluguel_aux != NULL)
         {
+            data_inicio = aluguel_aux->data_aluguel;
             data_final = aluguel_data_fim(aluguel_aux);
+            
+            if (compara_data(data_inicio, data_hoje) >= 0)
+            {
+                cliente_aux->status = 1;
+                aluguel_inicia(aluguel_aux);
+                cliente_atualiza_historico(1, cliente_aux);
+            }
+
             if (compara_data(data_final, data_hoje) > 0)
             {
                 cliente_aux->status = 0;

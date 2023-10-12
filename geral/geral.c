@@ -57,7 +57,7 @@ int menu_principal(Cliente* cli)
         case '0':
             strcpy(data_hoje, passa_tempo(data_hoje));
             cliente_atualiza_aluguel(cli, data_hoje);
-            registra(cli);
+            registro(cli);
 
             break;
 
@@ -104,9 +104,8 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
         printf(">>> [1] ALUGAR\n"); // submenu: adicionar cliente            
         printf(">>> [2] LISTAR\n"); // submenu: historico do cliente
         printf(">>> [3] BUSCAR\n"); // submenu: editar cliente e historico
-        printf(">>> [4] CONSULTAR QUANTIDADE\n");    
-        printf(">>> [5] REMOVER CLIENTE\n");    
-        printf(">>> [6] VOLTAR\n");    
+        printf(">>> [4] REMOVER CLIENTE\n");    
+        printf(">>> [5] VOLTAR\n");    
         
         alert_msg();
         printf("\nEscolha uma opcao: ");
@@ -119,7 +118,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
             case '0':
                 strcpy(data_hoje, passa_tempo(data_hoje));
                 cliente_atualiza_aluguel(cli, data_hoje);
-                registra(cli);
+                registro(cli);
 
                 break;
 
@@ -242,7 +241,8 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                                 {
                                     if(carro_disponibilidade(carro_aluga) == 1)
                                     {
-                                        cliente_aluga(cliente_aux, carro_aluga, data_hoje);
+                                        (cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
+                                        registro(cli);
                                         break;
                                     }
                                     else
@@ -301,7 +301,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         system(clear());
                         if (cliente_consulta(cli, cliente_aux) == 0)
                         {
-                            // registra(data_hoje, cli);   /* atualiza o registro */
+                            // registro(data_hoje, cli);   /* atualiza o registro */
                             break;
                         }
 
@@ -309,17 +309,8 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                     else break;
                 }
                 break;
-
-            case '4':
-                printf("\nConsultando Quantitativo...\n");
-                delay(ATRASO);
-
-                total_atual = cliente_total(cli);
-                printf("Ha %d clientes cadastrados.\n", total_atual);
-                delay(3000);       /* atraso para verificar resposta */
-                break;
             
-            case '5':
+            case '4':
                 printf("\nApagando Conta de Cadastro...\n");
                 delay(ATRASO);
 
@@ -336,7 +327,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         cliente_aux = cliente_filtra_busca(cli, dado);
                         if (cliente_aux != NULL)
                             cli = cliente_exclui(cli, cliente_doc(cliente_aux));
-                            // registra(data_hoje, cli);   /* atualiza o registro */
+                            // registro(data_hoje, cli);   /* atualiza o registro */
                         break;
                     }
                 }
@@ -347,7 +338,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 }
                 break;
 
-            case '6':
+            case '5':
                 printf("\nVoltando ao Menu Inicial...\n");
                 delay(ATRASO);
                 break;
@@ -357,7 +348,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                 delay(ATRASO);
                 break;
         }
-    } while (op2 != '6');
+    } while (op2 != '5');
 
     return cli;
 }
@@ -388,7 +379,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
             case '0':
                 strcpy(data_hoje, passa_tempo(data_hoje));
                 cliente_atualiza_aluguel(cli, data_hoje);
-                registra(cli);
+                registro(cli);
 
 
             case '1':
@@ -530,7 +521,7 @@ char *prazo(char *data, long long duracao)
     // converte data de início para valor numérico:
     long long data_ini = data_para_num(data);
     // soma a duração do aluguel:
-    long long data_fim = data_ini + duracao;
+    long long data_fim = data_ini + duracao - 1;
 
     // retorna a data final do aluguel:
     return num_para_data(data_fim);
@@ -703,7 +694,7 @@ char *passa_tempo(char *data)
                     if (teste_formato(ch_dias) != 0)    /* o valor é numérico */
                     {
                         dias = atoll(ch_dias);
-                        data_nova = prazo(data, dias);
+                        data_nova = prazo(data, dias + 1);
                         if (compara_data(data, data_nova) >= 0)
                         {
                             alert(-1);   /* data atualizada */
@@ -829,7 +820,7 @@ void delay(double milissegundos)
     while (milissegundos > clock() - tempo_inicial);
 }
 
-void registra(/*char *data, */Cliente *cli)
+void registro(/*char *data, */Cliente *cli)
 {
     FILE *fl = fopen("registro.txt", "wt");
     // verifica se o arquivo foi aberto corretamente:

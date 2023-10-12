@@ -34,15 +34,21 @@ char *cliente_doc(Cliente *cli);
 */
 int cliente_total(Cliente *cli);
 
-/* Função cliente_aluga
-    inicia o processo de alguel de carro
-*/
-void cliente_aluga(Cliente *cli, Carro* carro, char *data_hoje);
-
 /* Função cliente_resumo_aluguel
     exibe um resumo dos dados informados para o aluguel
 */
 int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao);
+
+/* Função cliente_conflito
+    verifica se há algum conflito de datas entre os aluguéis
+    dos clientes
+*/
+int cliente_conflito(Cliente *cli, char *data, long long duracao);
+
+/* Função cliente_aluga
+    inicia o processo de alguel de carro
+*/
+void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje);
 
 /* Função cliente_imprime
     exibe as informações básicas do cliente
