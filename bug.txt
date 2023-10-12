@@ -7,11 +7,13 @@ PADRONIZAR MENUS
             ✅ Cadastro Existente
             ✅ Aluguel
             ✅ Confirmação do Aluguel
-        ❓ padronizando seção de lista
-            ❓consulta
+        ✅ padronizando seção de lista
+            ✅consulta
+                ✅editor
+                ✅excluir
                 ❓visualizar histórico
-        ❓ padronizando seção de busca
-        ❓ padronizando seção de remoção
+        ✅ padronizando seção de busca
+        ✅ padronizando seção de remoção
 
     ❓ camada mais externa de Menu_carro
         ❓ seção de adição
