@@ -915,32 +915,23 @@ void registro_leia(Cliente **cli, Carro **carro)
 
 void menu_consulta_carro(Carro *carro)
 {
-    int op_consulta;
     Carro *carro_encontrado;
-    char tipo_de_busca[10];
+    char placa[10];
 
     while (1)
     {
-        cabecalho("CONSULTANDO CARRO\t", "\t\t");
-
-        printf("\n>>> [1]CONSULTAR PELO MODELO\n");
-        printf(">>> [2]CONSULTAR PELA PLACA\n");
-        printf(">>> [3]VOLTAR\n");
-
+        cabecalho("BUSCANDO CARRO\t", "PLACA\t");
         alert_msg();
-        printf("\nEscolha uma opcao: ");
 
-        op_consulta = teste_input();
+        printf("\n\nPlaca do carro (ou deixe em branco para voltar): ");
+        int i = 0;
+        while ((placa[i] = getchar()) != '\n') i++;
+        placa[i] = '\0';
+        //scanf(" %[^\n]", placa);
 
-        switch (op_consulta)
+        if (strlen(placa) > 0)                 /* verifica se está vazio */
         {
-        case '1':
-            cabecalho("BUSCANDO CARRO\t", "MODELO\t");
-
-            printf("\n\nModelo do carro: ");
-            scanf(" %[^\n]", tipo_de_busca);
-
-            carro_encontrado = carro_busca(carro, tipo_de_busca, 0);
+            carro_encontrado = carro_busca(carro, placa, 1);
             if (carro_encontrado != NULL)
             {
                 system(clear());
@@ -951,29 +942,9 @@ void menu_consulta_carro(Carro *carro)
 
             break;
 
-        case '2':
-            cabecalho("BUSCANDO CARRO\t", "PLACA\t");
-
-            printf("\n\nPlaca do carro: ");
-            scanf(" %[^\n]", tipo_de_busca);
-
-            carro_encontrado = carro_busca(carro, tipo_de_busca, 1);
-            if (carro_encontrado != NULL)
-            {
-                system(clear());
-                if(carro_consulta(carro, carro_encontrado) == 0) break;
-            }else
-            {
-                alert(-17);
-            }
-            
-            break;
-
-        case '3':
-            return;
-        
-        default:
-            alert(1);
+        }else
+        {
+            alert(0);   /* voltando para o menu (sem mensagem de erro) */
             break;
         }
     }
