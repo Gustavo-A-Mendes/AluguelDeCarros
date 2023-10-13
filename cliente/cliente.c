@@ -191,7 +191,10 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
                         alert(-11); /* Aluguel criado */
                     }
                     else
+                    {
+                        cliente_exclui(cli, cliente_aux->documento);
                         alert(-12); /* Aluguel cancelado */
+                    }
                     return;
                 }
             }
@@ -545,55 +548,38 @@ Cliente *cliente_exclui(Cliente *cli, char *dado)
     Cliente *cliente_excluido = cliente_busca(cli, dado);
     if (cliente_excluido == NULL)
         return cli;
-            
-    while (1)
-    {
-        cabecalho("EXCLUINDO CLIENTE\t", "\t\t");
-        
-        alert_msg();
-        printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
-        op = teste_input();
 
-        if (op == 'S')
-        { 
-            // ==================================================
-            // retira elemento do encadeamento:
-            if (cliente_excluido == cli) /* teste se é o primeiro elemento */
-                cli = cliente_excluido->prox_cliente;
-            else
-                cliente_excluido->ant_cliente->prox_cliente = cliente_excluido->prox_cliente;
+    // ==================================================
+    // retira elemento do encadeamento:
+    if (cliente_excluido == cli) /* teste se é o primeiro elemento */
+        cli = cliente_excluido->prox_cliente;
+    else
+        cliente_excluido->ant_cliente->prox_cliente = cliente_excluido->prox_cliente;
 
-            if (cliente_excluido->prox_cliente != NULL)    /* teste se é o último elemento */
-                cliente_excluido->prox_cliente->ant_cliente = cliente_excluido->ant_cliente;
+    if (cliente_excluido->prox_cliente != NULL)    /* teste se é o último elemento */
+        cliente_excluido->prox_cliente->ant_cliente = cliente_excluido->ant_cliente;
 
-            // ==================================================
-            // apaga o arquivo de histórico de aluguel:
-            cliente_apaga_historico(cliente_excluido);
+    // ==================================================
+    // apaga o arquivo de histórico de aluguel:
+    cliente_apaga_historico(cliente_excluido);
 
-            // ==================================================
-            // libera o espaço de memória:
-            free(cliente_excluido->nome);
-            free(cliente_excluido->documento);
-            free(cliente_excluido->telefone);
-            aluguel_libera(cliente_excluido->ultimo_aluguel);
-            free(cliente_excluido);
-            
-            registro(cli);
-            alert(-4);      /* cadastro excluido */
-            break;
-        } 
-        else if (op == 'N')
-            break;
-        else
-            alert(1);
-    }
+    // ==================================================
+    // libera o espaço de memória:
+    free(cliente_excluido->nome);
+    free(cliente_excluido->documento);
+    free(cliente_excluido->telefone);
+    aluguel_libera(cliente_excluido->ultimo_aluguel);
+    free(cliente_excluido);
+    
+    registro(cli);
+    alert(-4);      /* cadastro excluido */
 
     return cli;
 }
 
 int cliente_consulta(Cliente *cli, Cliente *consultado)
 {
-    int op_cons, vendo_historico = 0;
+    int op, op_cons, vendo_historico = 0;
     char consultado_doc[15], consultado_tel[15];
     Aluguel *aluguel_aux, *aluguel_lista;
 
@@ -642,8 +628,24 @@ int cliente_consulta(Cliente *cli, Cliente *consultado)
                 break;
             
             case '2':
-                cliente_exclui(cli, consultado->documento);
-                alert(0);       /* volta ao menu iniciar, sem mensagem */
+                while (1)
+                {
+                    cabecalho("EXCLUINDO CLIENTE\t", "\t\t");
+                    
+                    alert_msg();
+                    printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
+                    op = teste_input();
+
+                    if (op == 'S')
+                    {
+                        cliente_exclui(cli, consultado->documento);
+                        alert(0);       /* volta ao menu iniciar, sem mensagem */
+                    } 
+                    else if (op == 'N')
+                        break;
+                    else
+                        alert(1);
+                }
                 return 0;
             
             case '3':
