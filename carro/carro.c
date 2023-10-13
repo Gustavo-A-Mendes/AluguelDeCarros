@@ -223,12 +223,14 @@ Carro *carro_lista(Carro *carro)
 //     }
 // }
 
+void carro_disponivel(Carro *carro)
+{
+    carro->disponibilidade = 1;
+}
+
 void carro_alugado(Carro *carro)
 {
-    if (carro->disponibilidade == 1)
-        carro->disponibilidade = 0;
-    else    
-        carro->disponibilidade = 1;
+    carro->disponibilidade = 0;
 }
 
 Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)

@@ -44,6 +44,11 @@ void carro_imprime(Carro *carro);
 */
 Carro *carro_lista(Carro *carro);
 
+/* Função carro_disponivel
+
+*/
+void carro_disponivel(Carro *carro);
+
 /* Função carro_alugado
 
 */

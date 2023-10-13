@@ -91,6 +91,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
     char dado[32];
     int tipo, count, escolha;
     int total_anterior, total_atual;
+    int cliente_escolhido = 0;
 
     char nome[32], doc[13], tel[13];
     Cliente *cliente_aux = NULL;
@@ -197,12 +198,13 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         // caso o cadastro tenho sido realizado com sucesso,
                         // procura novo cliente dentro da nova lista:
                         if (total_atual != total_anterior)
-                            cliente_aux = cliente_busca(cli, doc);
-                        else
                         {
-                            alert(-3);      /* Cadastro falhou */
-                            break;
+                            cliente_aux = cliente_busca(cli, doc);
+                            cliente_escolhido = 1;
                         }
+                        else
+                            alert(-3);      /* Cadastro falhou */
+                        break;
 
                     }
                     else if (op_i == '2')   /* busca cliente cadastrado no sistema */
@@ -211,6 +213,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         {
                             cabecalho("SISTEMA DE ALUGUEL\t", "BUSCA CLIENTE\t");
                             cliente_aux = cliente_lista(cli);
+                            cliente_escolhido = 1;
                             break;
                         }
                         else
@@ -225,7 +228,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         alert(1);
                 }
 
-                if (op_i != 3)
+                if (cliente_escolhido == 1 && op_i != 3)
                 {
                     // Inicia o cadastro do aluguel:
                     if (cliente_aux != NULL)
@@ -241,7 +244,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                                 {
                                     if(carro_disponibilidade(carro_aluga) == 1)
                                     {
-                                        (cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
+                                        cliente_aluga(cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
                                         registro(cli);
                                         break;
                                     }
@@ -262,6 +265,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                     {
                         alert(-12);   /* aluguel cancelado */
                     }
+                    cliente_escolhido = 0;
                 }
                 delay(ATRASO);
                 break;
@@ -326,8 +330,26 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                         cabecalho("EXCLUINDO CLIENTE\t", "RESULTADOS\t");
                         cliente_aux = cliente_filtra_busca(cli, dado);
                         if (cliente_aux != NULL)
-                            cli = cliente_exclui(cli, cliente_doc(cliente_aux));
-                            // registro(data_hoje, cli);   /* atualiza o registro */
+                        {
+                            while (1)
+                            {
+                                cabecalho("EXCLUINDO CLIENTE\t", "\t\t");
+                                
+                                alert_msg();
+                                printf("\nO cadastro sera apagado. Deseja Continuar [S/N]?\n");
+                                op_i = teste_input();
+
+                                if (op_i == 'S')
+                                {
+                                    cliente_exclui(cli, cliente_aux->documento);
+                                    alert(0);       /* volta ao menu iniciar, sem mensagem */
+                                } 
+                                else if (op_i == 'N')
+                                    break;
+                                else
+                                    alert(1);
+                            }
+                        }
                         break;
                     }
                 }
@@ -933,7 +955,11 @@ void registro_leia(Cliente **cli, Carro **carro)
         }
 
         if(*cli  != NULL)
+        {
+            cliente_atualiza_aluguel(*cli, data_hoje);
+            // cliente_atualiza_historico(1, cli);
             printf("Dados recuperados com sucesso\n");
+        }
 
         delay(ATRASO);     /* atraso para verificar resposta */
 

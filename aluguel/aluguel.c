@@ -34,10 +34,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, i
     novo_aluguel->duracao = duracao;
     novo_aluguel->status_aluguel = status;
     novo_aluguel->carro = carro;
-    carro_alugado(novo_aluguel->carro);
     
-    // carro->disponibilidade = 0;
-    // printf("%d", carro->disponibilidade);
     // ==================================================
     // encadea o endereço dos alugueis:
 
@@ -53,7 +50,7 @@ Aluguel *aluguel_cria(Aluguel* aluguel, Carro* carro, char *data, int duracao, i
         novo_aluguel->prox_aluguel = ref->prox_aluguel;
         ref->prox_aluguel = novo_aluguel;
     }
-    // printf(":)\n"); delay(500);
+
     return aluguel;
 }
 
@@ -144,13 +141,6 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 	return ref; /* retorna o endereço de referência para o novo cadastro */
 }
 
-int aluguel_conflito(Aluguel *aluguel, Carro *carro, char *data, long long duracao)
-{
-    Aluguel *aluguel_aux = NULL;
-    char *data_inicio, *data_fim, *prazo_data;
-
-}
-
 char *aluguel_data_inicio(Aluguel *aluguel)
 {
     return aluguel->data_aluguel;
@@ -172,5 +162,5 @@ void aluguel_inicia(Aluguel *aluguel)
 void aluguel_finaliza(Aluguel *aluguel)
 {   
     aluguel->status_aluguel = 0;
-    carro_alugado(aluguel->carro);
+    carro_disponivel(aluguel->carro);
 }
