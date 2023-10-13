@@ -37,7 +37,7 @@ Cliente *cliente_cadastra(int tag, Cliente *cli, char *nome, char *doc, char *te
 
     // ==================================================
     // insere os dados do cliente:
-    strcpy(novo_cliente->nome, strupr(nome));
+    strcpy(novo_cliente->nome, string_upper(nome));
     novo_cliente->nome = realoca_string(novo_cliente->nome);
     strcpy(novo_cliente->documento, doc);
     novo_cliente->documento = realoca_string(novo_cliente->documento);

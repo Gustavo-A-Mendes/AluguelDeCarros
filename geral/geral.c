@@ -443,8 +443,6 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                 printf("\nListando Carros...\n");
                 delay(ATRASO);
 
-                system(clear());
-
                 while (1)
                 {
                     // Listando os carros da galeria
@@ -454,7 +452,6 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                     carro_aux = carro_lista(carro);
                     if (carro_aux != NULL)
                     {
-                        system(clear());
                         if(carro_consulta(carro, carro_aux) == 0) break;
                     }
                     else break;
@@ -836,36 +833,36 @@ void alert(int cod)
 void alert_msg(void)
 {
     // mensagem limpa, sem erro:
-    if (alert_cod == 0) printf("\n");
+    if (alert_cod == 0) printf("\n\n");
     
     // alerta de formato: 
-    else if (alert_cod == 1) printf(TXT_yellow"\nInsira uma opcao valida!"TXT_reset);
-    else if (alert_cod == 2) printf(TXT_red"\nFormato invalido!"TXT_reset);
-    else if (alert_cod == 3) printf(TXT_red"\nErro! Tamanho maximo excedido."TXT_reset);
-    else if (alert_cod == 4) printf(TXT_yellow"\nTamanho invalido! O CPF deve conter 11 digitos."TXT_reset);
-    else if (alert_cod == 5) printf(TXT_yellow"\nO CPF deve conter apenas numeros."TXT_reset);
-    else if (alert_cod == 6) printf(TXT_yellow"\nTamanho invalido! O telefone deve conter 11 digitos."TXT_reset);
-    else if (alert_cod == 7) printf(TXT_yellow"\nO telefone deve conter apenas numeros."TXT_reset);
-    else if (alert_cod == 8) printf(TXT_red"\nNao e possivel selecionar uma data anterior."TXT_reset);
+    else if (alert_cod == 1) printf(TXT_yellow"\nInsira uma opcao valida!\n"TXT_reset);
+    else if (alert_cod == 2) printf(TXT_red"\nFormato invalido!\n"TXT_reset);
+    else if (alert_cod == 3) printf(TXT_red"\nErro! Tamanho maximo excedido.\n"TXT_reset);
+    else if (alert_cod == 4) printf(TXT_yellow"\nTamanho invalido! O CPF deve conter 11 digitos.\n"TXT_reset);
+    else if (alert_cod == 5) printf(TXT_yellow"\nO CPF deve conter apenas numeros.\n"TXT_reset);
+    else if (alert_cod == 6) printf(TXT_yellow"\nTamanho invalido! O telefone deve conter 11 digitos.\n"TXT_reset);
+    else if (alert_cod == 7) printf(TXT_yellow"\nO telefone deve conter apenas numeros.\n"TXT_reset);
+    else if (alert_cod == 8) printf(TXT_red"\nNao e possivel selecionar uma data anterior.\n"TXT_reset);
     // alerta de processo:
-    else if (alert_cod == -1) printf(TXT_green"\nData atualizada!"TXT_reset);
-    else if (alert_cod == -2) printf(TXT_red"\nO cliente possui um aluguel ativo!"TXT_reset);
-    else if (alert_cod == -3) printf(TXT_red"\nCadastro cancelado!"TXT_reset);
-    else if (alert_cod == -4) printf(TXT_green"\nCadastro apagado!"TXT_reset);
-    else if (alert_cod == -5) printf(TXT_red"\nNao ha clientes cadastrados no sistema."TXT_reset);
-    else if (alert_cod == -6) printf(TXT_red"\nERRO! Cliente nao encontrado."TXT_reset);
-    else if (alert_cod == -7) printf(TXT_red"\nArquivo nao encontrado!"TXT_reset);
-    else if (alert_cod == -8) printf(TXT_red"\nNao foi possivel concluir o cadastro"TXT_reset);
-    else if (alert_cod == -9) printf(TXT_red"\nData Invalida!"TXT_reset);
-    else if (alert_cod == -10) printf(TXT_red"\nNao ha alugueis no historico."TXT_reset);
-    else if (alert_cod == -11) printf(TXT_green"\nAluguel criado!"TXT_reset);
-    else if (alert_cod == -12) printf(TXT_red"\nAluguel cancelado!"TXT_reset);
-    else if (alert_cod == -13) printf(TXT_green"\nDado(s) Atualizado(s)!"TXT_reset);
-    else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!"TXT_reset);
-    else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema."TXT_reset);
-    else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!"TXT_reset);
-    else if (alert_cod == -17) printf(TXT_yellow"\nCarro nao encotrdo!"TXT_reset);
-    else if (alert_cod == -18) printf(TXT_red"\nConflito de Data!"TXT_reset);
+    else if (alert_cod == -1) printf(TXT_green"\nData atualizada!\n"TXT_reset);
+    else if (alert_cod == -2) printf(TXT_red"\nO cliente possui um aluguel ativo!\n"TXT_reset);
+    else if (alert_cod == -3) printf(TXT_red"\nCadastro cancelado!\n"TXT_reset);
+    else if (alert_cod == -4) printf(TXT_green"\nCadastro apagado!\n"TXT_reset);
+    else if (alert_cod == -5) printf(TXT_red"\nNao ha clientes cadastrados no sistema.\n"TXT_reset);
+    else if (alert_cod == -6) printf(TXT_red"\nERRO! Cliente nao encontrado.\n"TXT_reset);
+    else if (alert_cod == -7) printf(TXT_red"\nArquivo nao encontrado!\n"TXT_reset);
+    else if (alert_cod == -8) printf(TXT_red"\nNao foi possivel concluir o cadastro\n"TXT_reset);
+    else if (alert_cod == -9) printf(TXT_red"\nData Invalida!\n"TXT_reset);
+    else if (alert_cod == -10) printf(TXT_red"\nNao ha alugueis no historico.\n"TXT_reset);
+    else if (alert_cod == -11) printf(TXT_green"\nAluguel criado!\n"TXT_reset);
+    else if (alert_cod == -12) printf(TXT_red"\nAluguel cancelado!\n"TXT_reset);
+    else if (alert_cod == -13) printf(TXT_green"\nDado(s) Atualizado(s)!\n"TXT_reset);
+    else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!\n"TXT_reset);
+    else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema.\n"TXT_reset);
+    else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!\n"TXT_reset);
+    else if (alert_cod == -17) printf(TXT_red"\nERRO! Carro nao encotrado.\n"TXT_reset);
+    else if (alert_cod == -18) printf(TXT_red"\nConflito de Data!\n"TXT_reset);
 
     alert(0);    /* reseta marcador */
 }
@@ -933,7 +930,6 @@ void registro_leia(Cliente **cli, Carro **carro)
         /* Recuperando informações dos carros */
         printf("Carregando dados dos Carros...\n");
         delay(ATRASO);     /* atraso para verificar resposta */
-        
         if((*carro = carro_leia(*carro)) != NULL)
         {
             printf("Dados recuperados com sucesso\n");
@@ -975,10 +971,10 @@ void menu_consulta_carro(Carro *carro)
 
     while (1)
     {
-        cabecalho("BUSCANDO CARRO\t", "PLACA\t");
+        cabecalho("BUSCANDO CARRO\t\t", "PLACA\t");
         alert_msg();
 
-        printf("\n\nPlaca do carro (ou deixe em branco para voltar): ");
+        printf("\nPlaca do carro (ou deixe em branco para voltar): ");
         int i = 0;
         while ((placa[i] = getchar()) != '\n') i++;
         placa[i] = '\0';
@@ -989,15 +985,16 @@ void menu_consulta_carro(Carro *carro)
             carro_encontrado = carro_busca(carro, placa, 1);
             if (carro_encontrado != NULL)
             {
-                system(clear());
-                if(carro_consulta(carro, carro_encontrado) == 0) break;
-            }else{
+                // system(clear());
+                if (carro_consulta(carro, carro_encontrado) == 0) return;
+            }
+            else
+            {
                 alert(-17);
             }
 
-            break;
-
-        }else
+        }
+        else
         {
             alert(0);   /* voltando para o menu (sem mensagem de erro) */
             break;

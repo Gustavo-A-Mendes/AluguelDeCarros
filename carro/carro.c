@@ -30,8 +30,6 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
     Carro *carro_aux;
     FILE *arquivo_carros;
 
-    alert_msg();
-
     novo->placa = (char*)malloc(41*sizeof(char)); 
     novo->modelo = (char*)malloc(15*sizeof(char)); 
     // ==================================================
@@ -39,9 +37,9 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
     
     // ==================================================
     // insere os dados do cliente:
-    strcpy(novo->modelo, strupr(modelo));
+    strcpy(novo->modelo, string_upper(modelo));
     novo->modelo = realoca_string(novo->modelo);
-    strcpy(novo->placa, placa);
+    strcpy(novo->placa, string_upper(placa));
     novo->placa = realoca_string(novo->placa);
     novo->disponibilidade = 1;
     novo->preco = preco;
@@ -402,7 +400,8 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
 
         printf("\n>>>[1] Editar\n");
         printf(">>>[2] Excluir\n");
-        printf(">>>[3] Volar");
+        printf(">>>[3] Voltar\n");
+        printf(">>>[4] Voltar ao menu");
 
         fflush(stdin);
 
@@ -423,7 +422,11 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
             case '3':
                 alert(0);
                 return 1;
-    
+
+            case '4':
+                alert(0);
+                return 0;
+
             default:
                 alert(1);
                 break;   
