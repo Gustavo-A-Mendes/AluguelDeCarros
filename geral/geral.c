@@ -241,7 +241,7 @@ Cliente *menu_cliente(Cliente *cli, Carro *carro)
                                 {
                                     if(carro_disponibilidade(carro_aluga) == 1)
                                     {
-                                        (cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
+                                        cliente_aluga(cli, cliente_doc(cliente_aux), carro_aluga, data_hoje);
                                         registro(cli);
                                         break;
                                     }
@@ -904,7 +904,11 @@ void registro_leia(Cliente **cli, Carro **carro)
         }
 
         if(*cli  != NULL)
+        {
+            cliente_atualiza_aluguel(*cli, data_hoje);
+            // cliente_atualiza_historico(1, cli);
             printf("Dados recuperados com sucesso\n");
+        }
 
         delay(ATRASO);     /* atraso para verificar resposta */
 

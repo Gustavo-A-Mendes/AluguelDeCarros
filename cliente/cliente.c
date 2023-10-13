@@ -156,10 +156,8 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
 void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
 {
     Cliente *cliente_aux = NULL;
-    // printf("%s\n", carro_aluga->modelo);
-    char *data = NULL, ch_duracao[100];
+    char ch_duracao[100];
     int i, op, duracao;
-    
     cliente_aux = cliente_busca(cli, doc);
 
     while (1)
@@ -172,9 +170,9 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
         printf("==========================================================================================\n");
 
         alert_msg();
-        printf("\nIniciando Aluguel em %s.\n", data_hoje); delay(500);
+        printf("\nIniciando Aluguel em %s.", data_hoje);
         
-        printf("Qual a duracao do aluguel? ");
+        printf("\nQual a duracao do aluguel? ");
         i = 0;
         while ((ch_duracao[i] = getchar()) != '\n') i++;
         ch_duracao[i] = '\0';
@@ -183,17 +181,19 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
             if (teste_formato(ch_duracao) > 0)
             {
                 duracao = atoi(ch_duracao);
-                
-                if (cliente_resumo_aluguel(cliente_aux, carro, data, duracao) == 1)
+                if (duracao > 0)
                 {
-                    cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro, data, duracao, 0);
-                    cliente_atualiza_aluguel(cli, data_hoje);
-                    cliente_atualiza_historico(1, cli);
-                    alert(-11); /* Aluguel criado */
+                    if (cliente_resumo_aluguel(cliente_aux, carro, data_hoje, duracao) == 1)
+                    {
+                        cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro, data_hoje, duracao, 0);
+                        cliente_atualiza_aluguel(cli, data_hoje);
+                        cliente_atualiza_historico(1, cli);
+                        alert(-11); /* Aluguel criado */
+                    }
+                    else
+                        alert(-12); /* Aluguel cancelado */
+                    return;
                 }
-                else
-                    alert(-12); /* Aluguel cancelado */
-                return;
             }
         } 
         alert(1); 
@@ -697,17 +697,15 @@ Cliente *cliente_atualiza_aluguel(Cliente *cli, char *data_hoje)
         aluguel_aux = cliente_aux->ultimo_aluguel;
         if (aluguel_aux != NULL)
         {
-            data_inicio = aluguel_aux->data_aluguel;
             data_final = aluguel_data_fim(aluguel_aux);
             
-            if (compara_data(data_inicio, data_hoje) >= 0)
+            if (compara_data(data_final, data_hoje) < 0)
             {
                 cliente_aux->status = 1;
                 aluguel_inicia(aluguel_aux);
                 cliente_atualiza_historico(1, cliente_aux);
             }
-
-            if (compara_data(data_final, data_hoje) > 0)
+            else
             {
                 cliente_aux->status = 0;
                 aluguel_finaliza(aluguel_aux);
@@ -863,7 +861,7 @@ Cliente *cliente_recupera_historico(Cliente *cli, Carro *carro, char *doc)
             
             // ==================================================
             // adiciona o aluguel na pilha do cliente:
-            cliente_aux =cliente_busca(cli, cli_doc);
+            cliente_aux = cliente_busca(cli, cli_doc);
 
             cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro_aux, data_ini, duracao, status_aluguel);
         }
