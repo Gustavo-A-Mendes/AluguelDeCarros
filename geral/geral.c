@@ -7,7 +7,7 @@
 #include "../carro/carro.h"
 #include "geral.h"
 
-#define ATRASO 150
+#define ATRASO 200
 char data_hoje[11] = "01/01/2023";     /* dia inicial da simulação */
 // int alert_cod = 0;
 
@@ -357,6 +357,8 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
 {
     int op3;
     Carro *carro_aux;
+    char modelo[20], placa[10];
+    float preco;
 
     do {
         system(clear());
@@ -386,6 +388,33 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
             case '1':
                 printf("\nAdicionando Carro ao Sistema...\n");
                 delay(ATRASO);
+
+                cabecalho("SISTEMA DE CADASTRO\t", "NOVO CADASTRO\t");
+
+                printf("\nDigite o modelo do carro: ");
+                scanf(" %19[^\n]", modelo);
+                while (getchar() != '\n');
+                if(strlen(modelo) > 18)
+                {
+                    alert(3);
+                    break;
+                }
+
+                printf("\nDigite a placa do carro: ");
+                scanf(" %9[^\n]", placa);
+                while (getchar() != '\n');
+                if(strlen(placa) > 8)
+                {
+                    alert(3);
+                    break;
+                }
+
+                printf("\nDigite o preco do carro: ");
+                scanf("%f", &preco);
+                while (getchar() != '\n');
+
+                carro = carro_cadastra(carro, modelo, placa, preco);
+
                 break;
             
             case '2':
@@ -950,3 +979,4 @@ void menu_consulta_carro(Carro *carro)
     }
     
 }
+

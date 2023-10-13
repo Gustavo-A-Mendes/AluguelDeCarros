@@ -27,6 +27,10 @@ struct carro
 Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
 {
     Carro *novo = (Carro*)malloc(sizeof(Carro));
+    Carro *carro_aux;
+    FILE *arquivo_carros;
+
+    alert_msg();
 
     novo->placa = (char*)malloc(41*sizeof(char)); 
     novo->modelo = (char*)malloc(15*sizeof(char)); 
@@ -67,6 +71,20 @@ Carro *carro_cadastra(Carro *carro, char *modelo, char *placa, float preco)
         
         ref->prox_carro = novo;
     }
+
+    arquivo_carros = fopen("./carro/galeria.txt", "wt");
+    if(arquivo_carros == NULL)
+    {
+        alert(-7);
+    }
+
+    fprintf(arquivo_carros, "%s\t%s\t%s\t%s\n", "MODELO", "PLACA", "PRECO", "STATUS");
+
+    for(carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro){
+        fprintf(arquivo_carros, "%s\t%s\t%.2f\t%d\n", carro_aux->modelo, carro_aux->placa, carro_aux->preco, carro_aux->disponibilidade);
+    }
+
+    fclose(arquivo_carros);
     return carro;
 }
 
