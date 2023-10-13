@@ -232,7 +232,7 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
                                 return;
                             }
                             else
-                                alert(-17);     /* Conflito de datas */
+                                alert(-18);     /* Conflito de datas */
                         }
                     }    
                 }
