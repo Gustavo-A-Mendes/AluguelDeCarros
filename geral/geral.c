@@ -942,23 +942,6 @@ void menu_consulta_carro(Carro *carro)
 
             break;
 
-        case '2':
-            system(clear());
-        
-            cabecalho("BUSCANDO CARRO\t", "PLACA\t");
-
-            printf("\n\nPlaca do carro: ");
-            scanf(" %[^\n]", tipo_de_busca);
-
-            carro_encontrado = carro_busca(carro, tipo_de_busca, 1);
-            if (carro_encontrado != NULL)
-            {
-                system(clear());
-                if(carro_consulta(carro, carro_encontrado) == 0) break;
-            }else
-            {
-                alert(-17);
-            } 
         }else
         {
             alert(0);   /* voltando para o menu (sem mensagem de erro) */
