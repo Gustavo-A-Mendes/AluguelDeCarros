@@ -380,6 +380,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                 strcpy(data_hoje, passa_tempo(data_hoje));
                 cliente_atualiza_aluguel(cli, data_hoje);
                 registro(cli);
+                break;
 
 
             case '1':
@@ -425,7 +426,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                 break;
 
             default:    
-                printf("\nInsira uma opcao valida!\n");
+                alert(1);
                 break;
         }
     } while (op3 != '4');
@@ -934,8 +935,6 @@ void menu_consulta_carro(Carro *carro)
         switch (op_consulta)
         {
         case '1':
-            system(clear());
-
             cabecalho("BUSCANDO CARRO\t", "MODELO\t");
 
             printf("\n\nModelo do carro: ");
@@ -953,8 +952,6 @@ void menu_consulta_carro(Carro *carro)
             break;
 
         case '2':
-            system(clear());
-        
             cabecalho("BUSCANDO CARRO\t", "PLACA\t");
 
             printf("\n\nPlaca do carro: ");
