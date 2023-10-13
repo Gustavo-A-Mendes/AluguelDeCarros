@@ -43,7 +43,7 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao);
     verifica se há algum conflito de datas entre os aluguéis
     dos clientes
 */
-int cliente_conflito(Cliente *cli, char *data, long long duracao);
+int cliente_conflito(Cliente *cli, Carro *carro, char *data, long long duracao);
 
 /* Função cliente_aluga
     inicia o processo de alguel de carro

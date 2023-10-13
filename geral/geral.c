@@ -380,6 +380,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                 strcpy(data_hoje, passa_tempo(data_hoje));
                 cliente_atualiza_aluguel(cli, data_hoje);
                 registro(cli);
+                break;
 
 
             case '1':
@@ -425,7 +426,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
                 break;
 
             default:    
-                printf("\nInsira uma opcao valida!\n");
+                alert(1);
                 break;
         }
     } while (op3 != '4');
@@ -813,6 +814,7 @@ void alert_msg(void)
     else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema."TXT_reset);
     else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!"TXT_reset);
     else if (alert_cod == -17) printf(TXT_yellow"\nCarro nao encotrdo!"TXT_reset);
+    else if (alert_cod == -18) printf(TXT_red"\nConflito de Data!"TXT_reset);
 
     alert(0);    /* reseta marcador */
 }
@@ -934,7 +936,25 @@ void menu_consulta_carro(Carro *carro)
             {
                 system(clear());
                 if(carro_consulta(carro, carro_encontrado) == 0) break;
-                break;
+            }else{
+                alert(-17);
+            }
+
+            break;
+
+        case '2':
+            system(clear());
+        
+            cabecalho("BUSCANDO CARRO\t", "PLACA\t");
+
+            printf("\n\nPlaca do carro: ");
+            scanf(" %[^\n]", tipo_de_busca);
+
+            carro_encontrado = carro_busca(carro, tipo_de_busca, 1);
+            if (carro_encontrado != NULL)
+            {
+                system(clear());
+                if(carro_consulta(carro, carro_encontrado) == 0) break;
             }else
             {
                 alert(-17);
