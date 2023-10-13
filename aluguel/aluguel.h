@@ -43,12 +43,6 @@ void aluguel_atualiza_historico(Aluguel *aluguel, FILE *fl);
 */
 Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio);
 
-/* Função aluguel_conflito
-    verifica se há algum conflito de datas entre os aluguéis
-    dos clientes
-*/
-int aluguel_conflito(Aluguel *aluguel, Carro *carro, char *data, long long duracao);
-
 /* Função aluguel_data_inicio
     retorna o primeiro dia do ultimo aluguel listado
 */

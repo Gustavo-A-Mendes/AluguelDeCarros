@@ -153,32 +153,6 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
     }
 }
 
-int cliente_conflito(Cliente *cli, Carro *carro, char *data, long long duracao)
-{
-    Cliente *cliente_aux;
-    char *data_inicio, *data_fim, *prazo_data;
-
-    for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
-    {
-        if (aluguel_conflito(cliente_aux->ultimo_aluguel, carro, data, duracao) == 1)
-
-
-        data_inicio = aluguel_data_inicio(cliente_aux->ultimo_aluguel);
-        data_fim = aluguel_data_fim(cliente_aux->ultimo_aluguel);
-
-        // o começo do aluguel analisado não pode iniciar durante o aluguel de outro cliente:
-        if (compara_data(data, data_inicio) < 0 && compara_data(data, data_fim) >= 0)
-            return 0;
-
-        // o fim do aluguel analisado precisa ser antes que o começo de um aluguel de outro cliente:
-        prazo_data = prazo(data, duracao);
-        if (compara_data(prazo_data, data_inicio) < 0 && compara_data(prazo_data, data_fim) >= 0)
-            return 0;
-
-        return 1;
-    }
-}
-
 void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
 {
     Cliente *cliente_aux = NULL;
@@ -198,48 +172,31 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
         printf("==========================================================================================\n");
 
         alert_msg();
-        printf("\nQual a Data do aluguel [dd/mm/aaaa]? ");
-        data = input_data(data);
+        printf("\nIniciando Aluguel em %s.\n", data_hoje); delay(500);
         
-        if (data != NULL)
-        {   
-            if (strlen(data) > 0)
+        printf("Qual a duracao do aluguel? ");
+        i = 0;
+        while ((ch_duracao[i] = getchar()) != '\n') i++;
+        ch_duracao[i] = '\0';
+        if (strlen(ch_duracao) > 0)
+        {
+            if (teste_formato(ch_duracao) > 0)
             {
-                // data_hoje = num_para_data(hoje);
-                if (compara_data(data_hoje, data) >= 0)     /* data do aluguel não pode ser antes da data atual */
+                duracao = atoi(ch_duracao);
+                
+                if (cliente_resumo_aluguel(cliente_aux, carro, data, duracao) == 1)
                 {
-                    printf("Qual a duracao do aluguel? ");
-                    i = 0;
-                    while ((ch_duracao[i] = getchar()) != '\n') i++;
-                    ch_duracao[i] = '\0';
-                    if (strlen(ch_duracao) > 0)
-                    {
-                        if (teste_formato(ch_duracao) > 0)
-                        {
-                            duracao = atoi(ch_duracao);
-                            
-                            if (cliente_conflito(cli, carro, data, duracao) == 1)
-                            {
-                                if (cliente_resumo_aluguel(cliente_aux, carro, data, duracao) == 1)
-                                {
-                                    cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro, data, duracao, 0);
-                                    cliente_atualiza_aluguel(cli, data_hoje);
-                                    cliente_atualiza_historico(1, cli);
-                                    alert(-11); /* Aluguel criado */
-                                }
-                                else
-                                    alert(-12); /* Aluguel cancelado */
-                                return;
-                            }
-                            else
-                                alert(-18);     /* Conflito de datas */
-                        }
-                    }    
+                    cliente_aux->ultimo_aluguel = aluguel_cria(cliente_aux->ultimo_aluguel, carro, data, duracao, 0);
+                    cliente_atualiza_aluguel(cli, data_hoje);
+                    cliente_atualiza_historico(1, cli);
+                    alert(-11); /* Aluguel criado */
                 }
                 else
-                    alert(8);  /* Data anterior ao dia atual */
+                    alert(-12); /* Aluguel cancelado */
+                return;
             }
-        }
+        } 
+        alert(1); 
     }
 }
 

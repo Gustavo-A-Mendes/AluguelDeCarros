@@ -144,13 +144,6 @@ Aluguel *aluguel_ordena(Aluguel *aluguel, char *data_inicio)
 	return ref; /* retorna o endereço de referência para o novo cadastro */
 }
 
-int aluguel_conflito(Aluguel *aluguel, Carro *carro, char *data, long long duracao)
-{
-    Aluguel *aluguel_aux = NULL;
-    char *data_inicio, *data_fim, *prazo_data;
-
-}
-
 char *aluguel_data_inicio(Aluguel *aluguel)
 {
     return aluguel->data_aluguel;
