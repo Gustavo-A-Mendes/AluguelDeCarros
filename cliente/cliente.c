@@ -153,13 +153,16 @@ int cliente_resumo_aluguel(Cliente *cli, Carro *carro, char *data, int duracao)
     }
 }
 
-int cliente_conflito(Cliente *cli, char *data, long long duracao)
+int cliente_conflito(Cliente *cli, Carro *carro, char *data, long long duracao)
 {
     Cliente *cliente_aux;
     char *data_inicio, *data_fim, *prazo_data;
 
     for (cliente_aux = cli; cliente_aux != NULL; cliente_aux = cliente_aux->prox_cliente)
     {
+        if (aluguel_conflito(cliente_aux->ultimo_aluguel, carro, data, duracao) == 1)
+
+
         data_inicio = aluguel_data_inicio(cliente_aux->ultimo_aluguel);
         data_fim = aluguel_data_fim(cliente_aux->ultimo_aluguel);
 
@@ -215,7 +218,7 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
                         {
                             duracao = atoi(ch_duracao);
                             
-                            if (cliente_conflito(cli, data, duracao) == 1)
+                            if (cliente_conflito(cli, carro, data, duracao) == 1)
                             {
                                 if (cliente_resumo_aluguel(cliente_aux, carro, data, duracao) == 1)
                                 {
@@ -226,9 +229,10 @@ void cliente_aluga(Cliente *cli, char *doc, Carro* carro, char *data_hoje)
                                 }
                                 else
                                     alert(-12); /* Aluguel cancelado */
-
                                 return;
                             }
+                            else
+                                alert(-17);     /* Conflito de datas */
                         }
                     }    
                 }

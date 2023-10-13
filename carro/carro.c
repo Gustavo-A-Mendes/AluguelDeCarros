@@ -232,7 +232,6 @@ Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)
     {
         for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
         {
-            // printf("len teste: %d", (int)strlen(dado_busca));
             if (compara(carro_aux->placa, dado_busca) == 0) {
                 // printf("achou, %s\n", C->documento);
                 return carro_aux;

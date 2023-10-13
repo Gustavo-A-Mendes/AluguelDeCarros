@@ -807,6 +807,7 @@ void alert_msg(void)
     else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!"TXT_reset);
     else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema."TXT_reset);
     else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!"TXT_reset);
+    else if (alert_cod == -17) printf(TXT_red"\nConflito de Data!"TXT_reset);
     
     alert(0);    /* reseta marcador */
 }
