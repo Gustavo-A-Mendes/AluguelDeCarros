@@ -367,7 +367,7 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
 
         printf(">>> [1] ADICIONAR\n"); 
         printf(">>> [2] LISTAR\n"); //submenu: consultar disp. e consultar historico
-        printf(">>> [3] CONSULTAR CARROS\n"); //Consultar se está disponivel 
+        printf(">>> [3] CONSULTAR CARRO\n"); //Consultar se está disponivel 
         printf(">>> [4] VOLTAR\n");
 
         alert_msg();
@@ -412,6 +412,11 @@ Carro *menu_carro(Cliente *cli, Carro *carro)
             case '3':
                 printf("\nConsultando informacoes do Carro...\n");
                 delay(ATRASO);
+
+                system(clear());
+
+                menu_consulta_carro(carro);
+
                 break;
 
             case '4':
@@ -807,8 +812,9 @@ void alert_msg(void)
     else if (alert_cod == -14) printf(TXT_green"\nCarro retirado do sistema com sucesso!"TXT_reset);
     else if (alert_cod == -15) printf(TXT_red"\nNao ha carros cadastrados no sistema."TXT_reset);
     else if (alert_cod == -16) printf(TXT_red"\nCarro Indisponivel!"TXT_reset);
-    else if (alert_cod == -17) printf(TXT_red"\nConflito de Data!"TXT_reset);
-    
+    else if (alert_cod == -17) printf(TXT_yellow"\nCarro nao encotrdo!"TXT_reset);
+    else if (alert_cod == -18) printf(TXT_red"\nConflito de Data!"TXT_reset);
+
     alert(0);    /* reseta marcador */
 }
 
@@ -904,4 +910,75 @@ void registro_leia(Cliente **cli, Carro **carro)
     }
 
     fclose(fl);
+}
+
+void menu_consulta_carro(Carro *carro)
+{
+    int op_consulta;
+    Carro *carro_encontrado;
+    char tipo_de_busca[10];
+
+    while (1)
+    {
+        cabecalho("CONSULTANDO CARRO\t", "\t\t");
+
+        printf("\n>>> [1]CONSULTAR PELO MODELO\n");
+        printf(">>> [2]CONSULTAR PELA PLACA\n");
+        printf(">>> [3]VOLTAR\n");
+
+        alert_msg();
+        printf("\nEscolha uma opcao: ");
+
+        op_consulta = teste_input();
+
+        switch (op_consulta)
+        {
+        case '1':
+            system(clear());
+
+            cabecalho("BUSCANDO CARRO\t", "MODELO\t");
+
+            printf("\n\nModelo do carro: ");
+            scanf(" %[^\n]", tipo_de_busca);
+
+            carro_encontrado = carro_busca(carro, tipo_de_busca, 0);
+            if (carro_encontrado != NULL)
+            {
+                system(clear());
+                if(carro_consulta(carro, carro_encontrado) == 0) break;
+            }else{
+                alert(-17);
+            }
+
+            break;
+
+        case '2':
+            system(clear());
+        
+            cabecalho("BUSCANDO CARRO\t", "PLACA\t");
+
+            printf("\n\nPlaca do carro: ");
+            scanf(" %[^\n]", tipo_de_busca);
+
+            carro_encontrado = carro_busca(carro, tipo_de_busca, 1);
+            if (carro_encontrado != NULL)
+            {
+                system(clear());
+                if(carro_consulta(carro, carro_encontrado) == 0) break;
+            }else
+            {
+                alert(-17);
+            }
+            
+            break;
+
+        case '3':
+            return;
+        
+        default:
+            alert(1);
+            break;
+        }
+    }
+    
 }

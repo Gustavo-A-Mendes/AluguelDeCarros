@@ -128,3 +128,8 @@ void registro(/*char *data, */Cliente *cli);
     lê o registro do sistema, e recupera os históricos de carros e clientes
 */
 void registro_leia(Cliente **cli, Carro **carro);
+
+/* Função menu_consulta_carro
+
+*/
+void menu_consulta_carro(Carro *carro);

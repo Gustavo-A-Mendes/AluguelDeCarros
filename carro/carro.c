@@ -221,7 +221,7 @@ Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)
     {
         for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)   
         {
-            if (compara(carro_aux->modelo, strupr(dado_busca)) == 0) {
+            if (compara(carro_aux->modelo, string_upper(dado_busca)) == 0) {
                 // printf("achou, %s\n", C->nome);
                 return carro_aux;
             }
@@ -232,7 +232,8 @@ Carro *carro_busca(Carro *carro, char *dado_busca, int tipo)
     {
         for (carro_aux = carro; carro_aux != NULL; carro_aux = carro_aux->prox_carro)
         {
-            if (compara(carro_aux->placa, dado_busca) == 0) {
+            // printf("len teste: %d", (int)strlen(dado_busca));
+            if (compara(carro_aux->placa, string_upper(dado_busca)) == 0) {
                 // printf("achou, %s\n", C->documento);
                 return carro_aux;
             }
@@ -381,8 +382,9 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
 
         printf("\n>>>[1] Editar\n");
         printf(">>>[2] Excluir\n");
-        printf(">>>[3] Voltar a Lista\n");
-        printf(">>>[4] Voltar ao Menu\n");
+        printf(">>>[3] Volar");
+
+        fflush(stdin);
 
         alert_msg();
         printf("\nEscolha uma opcao: ");
@@ -401,11 +403,7 @@ int carro_consulta(Carro *carro, Carro *carro_consultado)
             case '3':
                 alert(0);
                 return 1;
-
-            case '4':
-                alert(0);
-                return 0;
-            
+    
             default:
                 alert(1);
                 break;   
